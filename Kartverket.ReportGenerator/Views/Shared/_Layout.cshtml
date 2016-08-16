@@ -1,41 +1,81 @@
-﻿<!DOCTYPE html>
+﻿@using Kartverket.ReportGenerator.Helpers
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <!-- Stylesheets -->
+    @Styles.Render("~/Content/bower_components/kartverket-felleskomponenter/assets/css/styles")
+
+    <!-- Scripts -->
+    <script>
+        var applicationEnvironment = '@Html.EnvironmentName()';
+        var authenticationData = {
+            supportsLogin: true,
+            isAuthenticated: @Request.IsAuthenticated.ToString().ToLower(),
+            urlActionSignOut: '@Url.Action("LogOut", "AuthServices")',
+            urlActionSignIn: '@Url.Action("SignIn", "AuthServices", new { ReturnUrl = Request.Url })'
+            @if (Request.IsAuthenticated)
+            {
+                foreach (var c in System.Security.Claims.ClaimsPrincipal.Current.Claims) {
+                    if (c.Type == "urn:oid:0.9.2342.19200300.100.1.1" || c.Type == "username") {
+                       <text>, userName: '@c.Value'</text>
+                    }
+                }
+            }
+        }
+    </script>
+    @Scripts.Render("~/Content/bower_components/kartverket-felleskomponenter/assets/scripts")
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+<body class="geonorge-container prototype  geonorge ng-scope" ng-app="geonorge">
+    @RenderPage("~/Content/bower_components/kartverket-felleskomponenter/assets/partials/_SharedMenu.min.cshtml")
+
+    <div class="container container-breadcrumbs" id="navTabCont">
+        <ul class="breadcrumbs col-md-12">
+            <li><a href="@Html.GeonorgeUrl()">Geonorge</a></li>
+            <li><a href="/">Rapportverktøy</a></li>
+            @RenderSection("breadcrumb", false)
+        </ul>
+    </div>
+    <div class="body-content">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Rapportgenerator", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Hjem", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                </ul>
-            </div>
+            @RenderBody()
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Kartverket</p>
-        </footer>
-    </div>
+    <footer class="page-footer">
+        <div class="container container-footer">
+            <div>
+                <div class="block editorialblock col-md-12 col-lg-4  ">
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+                    <p><img alt="" src="~/Content/bower_components/kartverket-felleskomponenter/assets/images/geonorge.png" height="87" width="381" /></p>
+                    <small>Versjon @Html.ApplicationVersionNumber()</small>
+                    <ul class="editorialblock-list-item"></ul>
+                </div><div class="block editorialblock col-md-12 col-lg-4  ">
+
+                    <h2>Om nettstedet:</h2>
+
+                    <ul class="editorialblock-list-item">
+                        <li>
+                            <a href="@Html.GeonorgeUrl()/informasjon/om-geonorge/">Om Geonorge</a>
+                        </li>
+                        <li>
+                            <a href="@Html.GeonorgeUrl()/informasjon/aktuelt/annet/personvern-og-bruk-av-cookies/">Personvern og bruk av cookies</a>
+                        </li>
+                    </ul>
+                </div><div class="block editorialblock col-md-12 col-lg-4  ">
+
+                    <h2>Kontakt</h2>
+                    <p><span style="font-family: 'Open Sans', sans-serif; font-size: 22px;">Telefon: 08700<br /></span>Fra utlandet: +47 32 11 81 21<br /><a title="post@norgedigitalt.no" href="mailto:post@norgedigitalt.no">post@norgedigitalt.no</a><br />Org. nr.: 971 040 238</p>
+                    <hr />
+                    <p>En løsning fra</p>
+                    <p><img alt="" src="~/Content/bower_components/kartverket-felleskomponenter/assets/images/kartverket.png" height="75" width="195" /></p>
+                    <ul class="editorialblock-list-item"></ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
