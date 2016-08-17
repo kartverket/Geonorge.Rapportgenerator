@@ -7,32 +7,37 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Kartverket.ReportGenerator.Models;
+using Kartverket.ReportGenerator.Services;
 
 namespace Kartverket.ReportGenerator.Controllers
 {
     public class ReportController : Controller
     {
-        private ReportDbContext db = new ReportDbContext();
+        
+        private readonly IReportService _reportService;
+        private readonly IRegisterService _registerService;
 
-        // GET: Report
+
+        public ReportController(IReportService reportService, IRegisterService registerService)
+        {
+            _reportService = reportService;
+            _registerService = registerService;
+        }
+
+        
         public ActionResult Index()
         {
-            var reportQueries = db.ReportQueries.Include(r => r.MetadataEntry);
-            return View(reportQueries.ToList());
+            ViewBag.fylker = _registerService.GetFylker();
+            ViewBag.kommuner = _registerService.GetKommuner();
+            return View();
         }
 
         public ActionResult Details()
         {
+            ViewBag.fylker = _registerService.GetFylker();
+            ViewBag.kommuner = _registerService.GetKommuner();
             return View();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

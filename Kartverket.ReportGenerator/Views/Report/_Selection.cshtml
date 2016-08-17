@@ -19,10 +19,16 @@
                 <select data-placeholder="Klikk for å velge område" multiple class="chosen-select form-control selectOmraader">
                 <option>Hele landet</option>
                     <optgroup label="Fylke">
-                        <option>Akershus</option>
+                        @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)
+                        {
+                            <option value="@fylke.Key">@fylke.Value</option>
+                        }
                     </optgroup>
                     <optgroup label="Kommuner">
-                        <option>Asker</option>
+                        @foreach (KeyValuePair<String, String> kommune in ViewBag.kommuner)
+                        {
+                            <option value="@kommune.Key">@kommune.Value</option>
+                        }
                     </optgroup>
                 </select>
             </div>
