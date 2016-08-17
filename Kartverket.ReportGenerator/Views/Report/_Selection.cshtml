@@ -1,0 +1,51 @@
+﻿@using (Html.BeginForm("Details", "Report", FormMethod.Post, new { id = "queryform" }))
+{
+<div class="row">
+    <label class="col-md-3">
+        Velg område:
+    </label>
+    <label class="col-md-3">
+        Velg data:
+    </label>
+    <label class="col-md-4">
+        Velg spørring:
+    </label>
+    <div class="col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <div class="input-group chosen-input-group input-group-omraade">
+                <select data-placeholder="Klikk for å velge område" multiple class="chosen-select form-control selectOmraader">
+                <option>Hele landet</option>
+                    <optgroup label="Fylke">
+                        <option>Akershus</option>
+                    </optgroup>
+                    <optgroup label="Kommuner">
+                        <option>Asker</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <select name="data">
+            <option></option>
+            <optgroup label="Datapakker">
+                <option>Det offentlige kartgrunnlaget</option>
+            </optgroup>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select name="query" data-placeholder="Velg spørring">
+            <option></option>
+            <option>Antall DOK-datasett valgt og tillegg pr kommune</option>
+            <option>Valgte DOK-datasett pr tema</option>
+            <option>DOK-datasett dekning og valgt pr kommune</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <input class="btn-default" type="submit" value="Vis" />
+    </div>
+</div>
+}
