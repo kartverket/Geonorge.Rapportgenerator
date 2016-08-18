@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kartverket.ReportGenerator", "Kartverket.ReportGenerator\Kartverket.ReportGenerator.csproj", "{9741A067-079D-44C7-86EA-C394899E5C4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kartverket.ReportApi", "Kartverket.ReportApi\Kartverket.ReportApi.csproj", "{A5B650B8-98DC-4671-8856-B87440A1892A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{9741A067-079D-44C7-86EA-C394899E5C4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9741A067-079D-44C7-86EA-C394899E5C4F}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{9741A067-079D-44C7-86EA-C394899E5C4F}.Test|Any CPU.Build.0 = Test|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{A5B650B8-98DC-4671-8856-B87440A1892A}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
