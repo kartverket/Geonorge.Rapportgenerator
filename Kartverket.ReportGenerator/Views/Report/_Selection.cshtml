@@ -1,4 +1,5 @@
-﻿@using (Html.BeginForm("Details", "Report", FormMethod.Post, new { id = "queryform" }))
+﻿@using System.Linq
+@using (Html.BeginForm("Details", "Report", FormMethod.Post, new { id = "queryform" }))
 {
 <div class="row">
     <div class="col-md-3">
@@ -7,18 +8,18 @@
         </p>
         <div class="form-group">
             <div class="input-group chosen-input-group input-group-omraade">
-                <select data-placeholder="Klikk for å velge område" multiple class="chosen-select form-control selectOmraader">
+                <select data-placeholder="Klikk for å velge område" name="area" multiple class="chosen-select form-control selectOmraader">
                     <option>Hele landet</option>
                     <optgroup label="Fylke">
                         @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)
                         {
-                            <option value="@fylke.Key">@fylke.Value</option>
+                            <option value="@fylke.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(fylke.Key) ? "selected" : "")>@fylke.Value</option>
                         }
                     </optgroup>
                     <optgroup label="Kommuner">
                         @foreach (KeyValuePair<String, String> kommune in ViewBag.kommuner)
                         {
-                            <option value="@kommune.Key">@kommune.Value</option>
+                            <option value="@kommune.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(kommune.Key) ? "selected" : "")>@kommune.Value</option>
                         }
                     </optgroup>
                 </select>
@@ -33,7 +34,7 @@
             <select class="form-control" name="data">
                 <option></option>
                 <optgroup label="Datapakker">
-                    <option>Det offentlige kartgrunnlaget</option>
+                    <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" :"")>Det offentlige kartgrunnlaget</option>
                 </optgroup>
             </select>
         </div>
@@ -45,16 +46,16 @@
         <div class="form-group custom-select">
             <select name="query" class="form-control" data-placeholder="Velg spørring">
                 <option></option>
-                <option>Antall DOK-datasett valgt og tillegg pr kommune</option>
-                <option>Valgte DOK-datasett pr tema</option>
-                <option>DOK-datasett dekning og valgt pr kommune</option>
+                <option @(ViewBag.query == "Antall DOK-datasett valgt og tillegg pr kommune" ? "selected" :"")>Antall DOK-datasett valgt og tillegg pr kommune</option>
+                <option @(ViewBag.query == "Valgte DOK-datasett pr tema" ? "selected" :"")>Valgte DOK-datasett pr tema</option>
+                <option @(ViewBag.query == "DOK-datasett dekning og valgt pr kommune" ? "selected" :"")>DOK-datasett dekning og valgt pr kommune</option>
             </select>
         </div>
     </div>
     <div class="col-md-2">
         <p>&nbsp;</p>
         <div class="form-group">
-            <input class=" btn-default" type="submit" value="Vis" />
+            <input btn-default" type="submit" value="Vis" />
         </div>
     </div>
 </div>

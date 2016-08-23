@@ -1,4 +1,6 @@
-﻿<div id="tebleView" class="search-results">
+﻿@using Kartverket.ReportApi
+@model Kartverket.ReportApi.ReportResult
+<div id="tebleView" class="search-results">
  
     <div class="row search-results-table-heading">
         <div class="col-md-2">
@@ -23,22 +25,22 @@
     <div class="menu-separator search-results-table-heading"></div>
     <div class="row">
         <div class="col-md-2">
-            Akershus
+            
         </div>
         <div class="col-md-2">
-            Set offentlige kartgrunnlaget
+            
         </div>
         <div class="col-md-3">
-            Antall DOK-datasett valgt og tillegg pr kommune
+            
         </div>
         <div class="col-md-1">
-            79
+            
         </div>
         <div class="col-md-1">
-            141
+            
         </div>
         <div class="col-md-2">
-            56
+            @Model.TotalDataCount
         </div>
     </div>
 </div>
