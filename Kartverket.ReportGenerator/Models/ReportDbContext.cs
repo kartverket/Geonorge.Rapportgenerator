@@ -11,8 +11,8 @@ namespace Kartverket.ReportGenerator.Models
         public ReportDbContext():base("DefaultConnection"){
         }
 
-        public virtual DbSet<MetadataEntry> MetadataEntries { get; set; }
-        public virtual DbSet<ReportQuery> ReportQueries { get; set; }
-        public virtual DbSet<QueryParameter> QueryParameters { get; set; }
+        public virtual DbSet<ConfigMetadataEntry> MetadataEntries { get; set; }
+        public virtual DbSet<ConfigReportQuery> ReportQueries { get; set; }
+        public virtual DbSet<ConfigQueryParameter> QueryParameters { get; set; }
     }
 }

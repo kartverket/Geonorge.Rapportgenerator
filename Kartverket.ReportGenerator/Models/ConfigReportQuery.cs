@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Kartverket.ReportGenerator.Models
 {
-    public class ReportQuery
+    public class ConfigReportQuery
     {
         public int Id { get; set; }
         public string Type { get; set; }
@@ -17,8 +17,8 @@ namespace Kartverket.ReportGenerator.Models
         [ForeignKey("MetadataEntry")]
         [Required]
         public int MetadataID { get; set; }
-        public virtual MetadataEntry MetadataEntry { get; set; }
+        public virtual ConfigMetadataEntry MetadataEntry { get; set; }
 
-        public virtual List<QueryParameter> QueryParameters { get; set; }
+        public virtual List<ConfigQueryParameter> QueryParameters { get; set; }
     }
 }

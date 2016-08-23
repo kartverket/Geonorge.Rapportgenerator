@@ -6,12 +6,12 @@ using System.Web;
 
 namespace Kartverket.ReportGenerator.Models
 {
-    public class MetadataEntry
+    public class ConfigMetadataEntry
     {
         public int Id { get; set; }
         public string UUID { get; set; }
         public string Tittel { get; set; }
 
-        public virtual List<ReportQuery> ReportQueries { get; set; }
+        public virtual List<ConfigReportQuery> ReportQueries { get; set; }
     }
 }
