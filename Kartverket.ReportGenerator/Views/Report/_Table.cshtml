@@ -35,7 +35,7 @@
                 @data.Values[0].Key
             </div>
             <div class="col-md-3">
-
+                @ViewBag.query
             </div>
             <div class="col-md-1">
                 @data.Values[0].Value
@@ -44,6 +44,7 @@
                 @Model.TotalDataCount 
             </div>
             <div class="col-md-2">
+                @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / Model.TotalDataCount) * 100))
             </div>
         </div>
         }
