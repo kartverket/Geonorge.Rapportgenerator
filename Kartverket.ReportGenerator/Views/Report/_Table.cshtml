@@ -16,6 +16,9 @@
             Antall
         </div>
         <div class="col-md-1">
+            Tillegg
+        </div>
+        <div class="col-md-1">
             Totalt
         </div>
         <div class="col-md-2">
@@ -23,30 +26,30 @@
         </div>
     </div>
     <div class="menu-separator search-results-table-heading"></div>
-    @foreach (var data in Model.Data)
-    {
-        foreach (var values in data.Values)
-        {
-        <div class="row">
-            <div class="col-md-2">
-                @data.Label
-            </div>
-            <div class="col-md-2">
-                @data.Values[0].Key
-            </div>
-            <div class="col-md-3">
-                @ViewBag.query
-            </div>
-            <div class="col-md-1">
-                @data.Values[0].Value
-            </div>
-            <div class="col-md-1">
-                @Model.TotalDataCount 
-            </div>
-            <div class="col-md-2">
-                @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / Model.TotalDataCount) * 100))
-            </div>
+    @foreach (var data in Model.Data.ToList())
+    {      
+    <div class="row">
+        <div class="col-md-2">
+            @data.Label
         </div>
-        }
+        <div class="col-md-2">
+            @data.Values[0].Key
+        </div>
+        <div class="col-md-3">
+            @ViewBag.query
+        </div>
+        <div class="col-md-1">
+            @data.Values[0].Value
+        </div>
+        <div class="col-md-1">
+            @data.Values[1].Value
+        </div>
+        <div class="col-md-1">
+            @Model.TotalDataCount 
+        </div>
+        <div class="col-md-2">
+            @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / Model.TotalDataCount) * 100))
+        </div>
+    </div>
     }
 </div>
