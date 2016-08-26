@@ -13,10 +13,24 @@
             Spørring
         </div>
         <div class="col-md-1">
-            Antall
+        @if (ViewBag.query == "DOK-datasett dekning og valgt pr kommune")
+        {
+        <span>Dekning</span>
+        }
+        else
+        {
+            <span>Antall</span>
+        }
         </div>
         <div class="col-md-1">
-            Tillegg
+        @if (ViewBag.query == "DOK-datasett dekning og valgt pr kommune")
+        {
+            <span>Valgt</span>
+        }
+        else
+        {
+            <span>Tillegg</span>
+        }
         </div>
         <div class="col-md-1">
             Totalt
@@ -45,10 +59,16 @@
             @data.Values[1].Value
         </div>
         <div class="col-md-1">
-            @Model.TotalDataCount 
+            @if (Model.TotalDataCount > 0)
+            {
+                @Model.TotalDataCount 
+            }
         </div>
         <div class="col-md-2">
+            @if(Model.TotalDataCount > 0)
+            {
             @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / Model.TotalDataCount) * 100))
+            }
         </div>
     </div>
     }
