@@ -1,1 +1,40 @@
-﻿
+﻿@using Kartverket.ReportApi
+@model Kartverket.ReportApi.ReportResult
+<script src="~/Scripts/Chart.js"></script>
+<canvas id="myChart"></canvas>
+<script>
+    var dataLabels = [];
+    @foreach (var d in Model.Data.ToList())
+    {
+        @:dataLabels.push("@Html.Raw((d.Label))");
+        }
+
+    var dataValues = [];
+    @foreach (var d in Model.Data.ToList())
+    {
+        @:dataValues.push("@d.Values[0].Value");
+    }
+
+
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: dataLabels,
+            datasets: [{
+                label: '@ViewBag.query',
+                data: dataValues,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
