@@ -36,7 +36,7 @@ namespace Kartverket.ReportGenerator.Controllers
             return View();
         }
 
-        public ActionResult Details(string[] areas, string data, string query)
+        public ActionResult Details(string[] areas, string data, string query, string action)
         {
             ViewBag.fylker = _registerService.GetFylker();
             ViewBag.kommuner = _registerService.GetKommuner();
@@ -52,7 +52,17 @@ namespace Kartverket.ReportGenerator.Controllers
             }
             reportQuery.Parameters.Add(new ReportQueryParameter { Name = "data", Value = data });
             ReportResult result = _reportService.GetQueryResult(reportQuery);
-            return View(result);
+
+            if (action == "Excel")
+            {
+                var fileStream = new ExcelReportGenerator().CreateExcelSheet(reportQuery, result);
+
+                var fileStreamResult = new FileStreamResult(fileStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                fileStreamResult.FileDownloadName = "Rapport-" + query + ".xlsx";
+                return fileStreamResult;
+            }
+            else
+                return View(result);
         }
 
     }
