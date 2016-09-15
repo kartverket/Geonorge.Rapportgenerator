@@ -3,10 +3,11 @@
 <script src="~/Scripts/Chart.js"></script>
 @{int height = 200; }
 @if (ViewBag.query != "DOK-datasett dekning og valgt pr kommune")
-{ 
+{
     int numberOfRows = Model.Data.Count;
     int rowHeight = 7;
     height = rowHeight * numberOfRows;
+    if (height < 30) { height = 50; }
 
 <canvas id="myChart" width="400" height="@height"></canvas>
 <script>
