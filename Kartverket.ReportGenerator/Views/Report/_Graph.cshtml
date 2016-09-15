@@ -1,12 +1,13 @@
 ﻿@using Kartverket.ReportApi
 @model Kartverket.ReportApi.ReportResult
 <script src="~/Scripts/Chart.js"></script>
-@{
+@{int height = 200; }
+@if (ViewBag.query != "DOK-datasett dekning og valgt pr kommune")
+{ 
     int numberOfRows = Model.Data.Count;
-    int height = 200;
     int rowHeight = 7;
     height = rowHeight * numberOfRows;
-}
+
 <canvas id="myChart" width="400" height="@height"></canvas>
 <script>
 @{ string label1 = ViewBag.query;
@@ -16,25 +17,39 @@
         label1 = "Antall DOK-datasett valgt";
         label2 = "Antall tilleggsdataset valgt";
     }
+    else if (label1 == "Valgte DOK-datasett pr tema")
+    {
+        label1 = "Antall kommuner på landsbasis som har valgt datasettet";
+    }
 
 }
     var dataLabels = [];
-    @foreach (var d in Model.Data.ToList())
+    @if (ViewBag.query == "Valgte DOK-datasett pr tema")
     {
+        foreach (var d in Model.Data.ToList())
+        {
+        @:dataLabels.push("@Html.Raw((d.Label + " - " + d.Values[0].Key))");
+        }
+    }
+    else
+    {
+        foreach (var d in Model.Data.ToList())
+        {
         @:dataLabels.push("@Html.Raw((d.Label))");
-                        }
+        }
+    }
 
     var dataValues = [];
     @foreach (var d in Model.Data.ToList())
     {
         @:dataValues.push("@d.Values[0].Value");
-                        }
+    }
 
     var dataValues2 = [];
     @foreach (var d in Model.Data.ToList())
     {
       @:dataValues2.push("@d.Values[1].Value");
-                    }
+    }
 
 
     var ctx = document.getElementById("myChart");
@@ -43,36 +58,31 @@
         data: {
             labels: dataLabels,
             datasets: [{
-                label: '@label1',
+                label: '@Html.Raw(label1)',
                 data: dataValues,
                 backgroundColor: 'rgba(0,0,204,0.7)'
             }
             @if (!string.IsNullOrEmpty(label2))
             {
             @:,
-            @:{
-            @:label: '@label2',
-            @:data: dataValues2,
-            @:backgroundColor: 'rgba(255,128,0,0.7)'
-            @:}
+                @:{
+                    @:label: '@label2',
+                    @:data: dataValues2,
+                    @:backgroundColor: 'rgba(255,128,0,0.7)'
+                    @:}
             }
             ]
         },
         options: {
             scales: {
                 yAxes: [{
-                    stacked: true,
-                    ticks: {
-                        beginAtZero: true           
-                    }
+                    stacked: true
                 }],
                 xAxes: [{
-                    stacked: true,
-                    ticks: {
-                        beginAtZero: true
-                    }
+                    stacked: true
                 }]
             }
         }
     });
 </script>
+}
