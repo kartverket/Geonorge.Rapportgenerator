@@ -3,17 +3,32 @@
 <script src="~/Scripts/Chart.js"></script>
 <canvas id="myChart"></canvas>
 <script>
+@{ string label1 = ViewBag.query;
+    string label2 = "";
+    if (label1 == "Antall DOK-datasett valgt og tillegg pr kommune")
+    {
+        label1 = "Antall DOK-datasett valgt";
+        label2 = "Antall tilleggsdataset valgt";
+    }
+
+}
     var dataLabels = [];
     @foreach (var d in Model.Data.ToList())
     {
         @:dataLabels.push("@Html.Raw((d.Label))");
-        }
+                        }
 
     var dataValues = [];
     @foreach (var d in Model.Data.ToList())
     {
         @:dataValues.push("@d.Values[0].Value");
-    }
+                        }
+
+    var dataValues2 = [];
+    @foreach (var d in Model.Data.ToList())
+    {
+      @:dataValues2.push("@d.Values[1].Value");
+                    }
 
 
     var ctx = document.getElementById("myChart");
@@ -22,10 +37,20 @@
         data: {
             labels: dataLabels,
             datasets: [{
-                label: '@ViewBag.query',
+                label: '@label1',
                 data: dataValues,
-                borderWidth: 1
-            }]
+                backgroundColor: 'rgba(0,0,204,0.7)'
+            }
+            @if (!string.IsNullOrEmpty(label2))
+            {
+            @:,
+            @:{
+            @:label: '@label2',
+            @:data: dataValues2,
+            @:backgroundColor: 'rgba(255,128,0,0.7)'
+            @:}
+            }
+            ]
         },
         options: {
             scales: {
@@ -33,6 +58,9 @@
                     ticks: {
                         beginAtZero: true
                     }
+                }],
+                xAxes: [{
+                    stacked: true
                 }]
             }
         }
