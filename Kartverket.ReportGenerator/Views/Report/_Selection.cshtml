@@ -8,7 +8,7 @@
         </p>
         <div class="form-group">
             <div class="input-group chosen-input-group input-group-omraade">
-                <select data-placeholder="Klikk for å velge område" name="areas" multiple class="chosen-select form-control selectOmraader">
+                <select required data-placeholder="Klikk for å velge område" name="areas" multiple class="chosen-select form-control selectOmraader">
                     <option @(((IList<string>)ViewBag.selectedAreas).Contains("Hele landet") ? "selected" : "")>Hele landet</option>
                     <optgroup label="Fylke">
                         @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)
@@ -31,7 +31,7 @@
             Velg data:
         </p>
         <div class="form-group custom-select">
-            <select class="form-control" name="data">
+            <select required class="form-control" name="data">
                 <option></option>
                 <optgroup label="Datapakker">
                     <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" :"")>Det offentlige kartgrunnlaget</option>
@@ -44,7 +44,7 @@
             Velg spørring:
         </p>
         <div class="form-group custom-select">
-            <select name="query" class="form-control" data-placeholder="Velg spørring">
+            <select required name="query" class="form-control" data-placeholder="Velg spørring">
                 <option></option>
                 <option @(ViewBag.query == "Antall DOK-datasett valgt og tillegg pr kommune" ? "selected" :"")>Antall DOK-datasett valgt og tillegg pr kommune</option>
                 <option @(ViewBag.query == "Valgte DOK-datasett pr tema" ? "selected" :"")>Valgte DOK-datasett pr tema</option>

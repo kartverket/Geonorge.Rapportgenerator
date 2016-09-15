@@ -1,7 +1,13 @@
 ﻿@using Kartverket.ReportApi
 @model Kartverket.ReportApi.ReportResult
 <script src="~/Scripts/Chart.js"></script>
-<canvas id="myChart"></canvas>
+@{
+    int numberOfRows = Model.Data.Count;
+    int height = 200;
+    int rowHeight = 7;
+    height = rowHeight * numberOfRows;
+}
+<canvas id="myChart" width="400" height="@height"></canvas>
 <script>
 @{ string label1 = ViewBag.query;
     string label2 = "";
@@ -61,7 +67,10 @@
                     }
                 }],
                 xAxes: [{
-                    stacked: true
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true
+                    }
                 }]
             }
         }
