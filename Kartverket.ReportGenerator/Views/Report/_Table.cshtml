@@ -59,15 +59,15 @@
             @data.Values[1].Value
         </div>
         <div class="col-md-1">
-            @if (Model.TotalDataCount > 0)
+            @if (data.TotalDataCount > 0)
             {
-                @Model.TotalDataCount 
+                @data.TotalDataCount 
             }
         </div>
         <div class="col-md-2">
-            @if(Model.TotalDataCount > 0)
+            @if(data.TotalDataCount > 0)
             {
-            @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / Model.TotalDataCount) * 100))
+            @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100))
             }
         </div>
     </div>

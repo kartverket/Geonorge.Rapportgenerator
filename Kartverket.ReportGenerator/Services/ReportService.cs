@@ -59,6 +59,7 @@ namespace Kartverket.ReportGenerator.Services
                 ReportResultData reportResultData = new ReportResultData();
                 List<ReportResultDataValue> reportResultDataValues = new List<ReportResultDataValue>();
                 reportResultData.Label = municipality;
+                reportResultData.TotalDataCount = resultTotal.numberMatched;
                 ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
                 reportResultDataValue.Key = "HC-parkeringsplasser";
                 reportResultDataValue.Value = result.numberMatched.ToString();
