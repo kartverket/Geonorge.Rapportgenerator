@@ -34,7 +34,10 @@
             <select required class="form-control" name="data">
                 <option></option>
                 <optgroup label="Datapakker">
-                    <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" :"")>Det offentlige kartgrunnlaget</option>
+                    <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" : "")>Det offentlige kartgrunnlaget</option>
+                </optgroup>
+                <optgroup label="Tema">
+                    <option @(ViewBag.data == "HC-parkeringsplasser" ? "selected" : "")>HC-parkeringsplasser</option>
                 </optgroup>
             </select>
         </div>
@@ -49,6 +52,7 @@
                 <option @(ViewBag.query == "Antall DOK-datasett valgt og tillegg pr kommune" ? "selected" :"")>Antall DOK-datasett valgt og tillegg pr kommune</option>
                 <option @(ViewBag.query == "Valgte DOK-datasett pr tema" ? "selected" :"")>Valgte DOK-datasett pr tema</option>
                 <option @(ViewBag.query == "DOK-datasett dekning og valgt pr kommune" ? "selected" :"")>DOK-datasett dekning og valgt pr kommune</option>
+                <option @(ViewBag.query == "Bredde < 200 cm" ? "selected" : "")>Bredde < 200 cm</option>
             </select>
         </div>
     </div>
