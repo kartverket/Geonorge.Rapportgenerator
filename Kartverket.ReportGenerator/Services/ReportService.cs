@@ -40,35 +40,40 @@ namespace Kartverket.ReportGenerator.Services
             ReportResult reportResult = new ReportResult();
             reportResult.Data = new List<ReportResultData>();
 
-            string municipality = query.Parameters.Where(p => p.Name == "area").Select(a => a.Value).FirstOrDefault();
-            if (string.IsNullOrEmpty(municipality))
-                municipality = "0301";
+            var areas = query.Parameters.Where(p => p.Name == "area").Select(a => a.Value).ToList();
 
-            string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommuneForMaksBredde&kommunenummer="+ municipality + "&bredde=200";
-            string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommune&kommunenummer=" + municipality;
+            foreach(var area in areas)
+            {
+                string municipality = area;
+                if (string.IsNullOrEmpty(municipality))
+                    municipality = "0301";
 
-            FeatureCollection result = GetFeature(reportStoredQuery);
-            FeatureCollection resultTotal = GetFeature(reportStoredQueryTotal);
+                string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommuneForMaksBredde&kommunenummer="+ municipality + "&bredde=200";
+                string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommune&kommunenummer=" + municipality;
 
-            reportResult.TotalDataCount = resultTotal.numberMatched;
+                FeatureCollection result = GetFeature(reportStoredQuery);
+                FeatureCollection resultTotal = GetFeature(reportStoredQueryTotal);
 
-            ReportResultData reportResultData = new ReportResultData();
-            List<ReportResultDataValue> reportResultDataValues = new List<ReportResultDataValue>();
-            reportResultData.Label = municipality;
-            ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
-            reportResultDataValue.Key = "HC-parkeringsplasser";
-            reportResultDataValue.Value = result.numberMatched.ToString();
-            reportResultDataValues.Add(reportResultDataValue);
+                reportResult.TotalDataCount = 0;
 
-            //additional start
-            reportResultDataValue = new ReportResultDataValue();
-            reportResultDataValue.Key = "";
-            reportResultDataValue.Value = "";
-            reportResultDataValues.Add(reportResultDataValue);
-            //additional end
+                ReportResultData reportResultData = new ReportResultData();
+                List<ReportResultDataValue> reportResultDataValues = new List<ReportResultDataValue>();
+                reportResultData.Label = municipality;
+                ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
+                reportResultDataValue.Key = "HC-parkeringsplasser";
+                reportResultDataValue.Value = result.numberMatched.ToString();
+                reportResultDataValues.Add(reportResultDataValue);
 
-            reportResultData.Values = reportResultDataValues;
-            reportResult.Data.Add(reportResultData);
+                //additional start
+                reportResultDataValue = new ReportResultDataValue();
+                reportResultDataValue.Key = "";
+                reportResultDataValue.Value = "";
+                reportResultDataValues.Add(reportResultDataValue);
+                //additional end
+
+                reportResultData.Values = reportResultDataValues;
+                reportResult.Data.Add(reportResultData);
+            }
 
             return reportResult;
         }
