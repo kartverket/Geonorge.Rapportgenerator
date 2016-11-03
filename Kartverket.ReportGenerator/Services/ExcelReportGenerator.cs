@@ -51,7 +51,7 @@ namespace Kartverket.ReportGenerator.Services
 
                 if (data.TotalDataCount > 0)
                     AddContent(Convert.ToInt16(data.TotalDataCount), "0");
-                if(result.TotalDataCount > 0)
+                if(data.TotalDataCount > 0)
                     AddContent((Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100)), "0");
 
             }
