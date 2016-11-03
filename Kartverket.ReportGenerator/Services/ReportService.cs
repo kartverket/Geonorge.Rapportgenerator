@@ -16,10 +16,12 @@ namespace Kartverket.ReportGenerator.Services
     public class ReportService: IReportService
     {
         private readonly ReportDbContext _dbContext;
+        private readonly IRegisterService _registerService;
 
-        public ReportService(ReportDbContext dbContext)
+        public ReportService(ReportDbContext dbContext, IRegisterService registerService)
         {
             _dbContext = dbContext;
+            _registerService = registerService;
         }
 
         public ReportResult GetQueryResult(ReportApi.ReportQuery query = null)
@@ -37,6 +39,10 @@ namespace Kartverket.ReportGenerator.Services
         private ReportResult GetWfsUURegistryQueryResult(ReportQuery query)
         {
             //testing
+            var fylker = _registerService.GetFylker();
+            var kommuner = _registerService.GetKommuner();
+            var admUnits = fylker.Union(kommuner).ToDictionary(k => k.Key, v => v.Value);
+
             ReportResult reportResult = new ReportResult();
             reportResult.Data = new List<ReportResultData>();
 
@@ -45,8 +51,6 @@ namespace Kartverket.ReportGenerator.Services
             foreach(var area in areas)
             {
                 string municipality = area;
-                if (string.IsNullOrEmpty(municipality))
-                    municipality = "0301";
 
                 string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommuneForMaksBredde&kommunenummer="+ municipality + "&bredde=200";
                 string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrKommune&kommunenummer=" + municipality;
@@ -58,7 +62,7 @@ namespace Kartverket.ReportGenerator.Services
 
                 ReportResultData reportResultData = new ReportResultData();
                 List<ReportResultDataValue> reportResultDataValues = new List<ReportResultDataValue>();
-                reportResultData.Label = municipality;
+                reportResultData.Label = admUnits.ContainsKey(municipality) ? admUnits[municipality] : municipality;
                 reportResultData.TotalDataCount = resultTotal.numberMatched;
                 ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
                 reportResultDataValue.Key = "HC-parkeringsplasser";

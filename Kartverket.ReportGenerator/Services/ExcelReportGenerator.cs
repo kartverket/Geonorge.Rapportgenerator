@@ -49,10 +49,10 @@ namespace Kartverket.ReportGenerator.Services
                 else
                     AddContent(data.Values[1].Value);
 
-                if (result.TotalDataCount > 0)
-                    AddContent(Convert.ToInt16(result.TotalDataCount), "0");
+                if (data.TotalDataCount > 0)
+                    AddContent(Convert.ToInt16(data.TotalDataCount), "0");
                 if(result.TotalDataCount > 0)
-                    AddContent((Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / result.TotalDataCount) * 100)), "0");
+                    AddContent((Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100)), "0");
 
             }
         }
