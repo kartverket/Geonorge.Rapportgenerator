@@ -52,9 +52,11 @@ namespace Kartverket.ReportGenerator.Services
             foreach(var area in areas)
             {
                 string areaUnit = (area == "Hele landet" ? "*" : area);
-                string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr="+ areaUnit + "&bredde=200";
-                string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhet&admEnhNr=" + areaUnit;
 
+                string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=16&bredde=200";
+                string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhet&admEnhNr=16";
+                reportStoredQuery = SetAdmEnhNr(reportStoredQuery, areaUnit);
+                reportStoredQueryTotal = SetAdmEnhNr(reportStoredQueryTotal, areaUnit);
 
                 FeatureCollection result = GetFeature(reportStoredQuery);
                 FeatureCollection resultTotal = GetFeature(reportStoredQueryTotal);
@@ -82,6 +84,17 @@ namespace Kartverket.ReportGenerator.Services
             }
 
             return reportResult;
+        }
+
+        private string SetAdmEnhNr(string reportStoredQuery, string areaUnit)
+        {
+            Uri uri = new Uri(reportStoredQuery);
+            System.Collections.Specialized.NameValueCollection nvc = HttpUtility.ParseQueryString(uri.Query);
+            nvc["admEnhNr"] = (areaUnit ?? "").ToString();
+            Uri newUri = new UriBuilder(uri) { Query = nvc.ToString() }.Uri;
+
+            return newUri.ToString();
+
         }
 
         private FeatureCollection GetFeature(string reportUrl)
