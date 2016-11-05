@@ -1,1 +1,111 @@
-﻿
+﻿<div id="maplayer">
+</div>
+<footer></footer>
+
+<script>
+    var win;
+
+    function postMessage(msg) {
+        var message = JSON.stringify(msg);
+        try{
+            win.postMessage(message,'http://norgeskart.no');
+        }
+        catch(e) {}
+    }
+
+    @{
+        string zoomLevel = "6";
+     }
+
+    var zoomLevel = @zoomLevel;
+
+    var x = 284346;
+    var y = 6662017;
+
+        //console.log("x: " + x);
+        //console.log("y: " + y);
+
+        var iframe = document.createElement('iframe');
+        document.getElementById('maplayer').appendChild(iframe);
+        iframe.id = "iframe";
+        iframe.src= "http://norgeskart.no/geoportal/testing/dynamisk.html#" + zoomLevel + "/" + x +"/"+ y;
+        iframe.frameBorder=0;
+        iframe.height = "600";
+        win = document.getElementById("iframe").contentWindow;
+
+        var wfsList = [];
+
+        loadWfs();
+
+    function AddMarker(x, y, title)
+    {
+        for (var i = 0; i < wfsList.length; i ++ ){
+            console.log("addMarker:"+wfsList[i].x + "," + wfsList[i].y);
+            postMessage({ "cmd":"addMarker","x":wfsList[i].x + i,"y":wfsList[i].y + 1,"title":wfsList[i].title} );
+        }
+    }
+
+    var counterInterVal = 0;
+
+    function setMarker() {
+
+        if(counterInterVal <= 10) {
+            counterInterVal++;
+            AddMarker();
+        } else {
+            clearInterval(myTimer);
+        }
+    }
+    var myTimer = setInterval(setMarker, 1000);
+
+    function loadWfs() {
+        $.ajax({
+            headers: {          
+                Accept: "application/rdf+xml",
+                "Content-Type": "text/plain; charset=utf-8"   
+            },    
+            type: "GET",
+            url: "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=06&bredde=200",
+            success: setWfs
+        });
+    }
+
+    function setWfs(xml) {
+        console.log(xml);
+
+        $(xml).find("wfs\\:member, member").each(function () {
+            var pos = $(this).find("gml\\:pos, pos").text();
+            
+            console.log(pos);
+
+            var coords = pos.split(' ');
+
+            x = coords[0];
+            y = coords[1];
+
+            console.log("xCoord:"+x);
+            console.log("yCoord:"+y);
+
+            $.ajax({
+                dataType: "json",
+                async: false,
+                url: 'http://norgeskart.no/ws/trans.py?ost=' + y + '&nord=' + x + '&sosiKoordSys=84&resSosiKoordSys=23',
+                success: function(result) {
+                    x = Math.floor(result.ost);
+                    y = Math.floor(result.nord);
+                }
+            });
+
+            console.log("xTrans:"+x);
+            console.log("yTrans:"+y);
+
+            wfsList.push({ x: x, y: y, title: "HC-parkeringsplass bredde < 200 cm" });
+
+            console.log("----------------------------------------------------");    
+
+        });
+    }
+
+    
+
+</script>
