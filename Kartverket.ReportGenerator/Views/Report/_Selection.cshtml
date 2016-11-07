@@ -8,7 +8,7 @@
         </p>
         <div class="form-group">
             <div class="input-group chosen-input-group input-group-omraade">
-                <select required data-placeholder="Klikk for å velge område" name="areas" multiple class="chosen-select form-control selectOmraader">
+                <select required data-placeholder="Klikk for å velge område" name="areas" class="chosen-select form-control selectOmraader">
                     <option @(((IList<string>)ViewBag.selectedAreas).Contains("Hele landet") ? "selected" : "")>Hele landet</option>
                     <optgroup label="Fylke">
                         @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)

@@ -1,4 +1,6 @@
-﻿<div id="maplayer">
+﻿@if (!ViewBag.query.Contains("DOK-datasett"))
+{
+<div id="maplayer">
 </div>
 <footer></footer>
 
@@ -253,3 +255,5 @@
 
 
 </script>
+
+}
