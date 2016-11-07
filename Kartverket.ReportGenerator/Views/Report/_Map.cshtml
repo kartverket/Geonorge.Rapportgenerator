@@ -14,28 +14,172 @@
     }
 
     @{
-        string zoomLevel = "6";
-     }
+        //Default center point
+        var x = "284346";
+        var y = "6662017";
+
+        string zoomLevel = "3";
+
+        //Default hele norge
+        string data_north = "72";
+        string data_south = "57";
+        string data_east = "33";
+        string data_west = "2";
+
+        string admEnhet = ViewBag.selectedAreas[0];
+        if (admEnhet == "Hele landet") {
+            admEnhet = "*";
+        }
+        else if (admEnhet.Length == 2) // Fylke
+        {
+            zoomLevel = "6";
+            if (admEnhet == "02")
+            {
+                data_north = "60.605148"; data_south = "59.471882"; data_east = "11.926978"; data_west = "10.328467";
+            }
+            else if (admEnhet == "09")
+            {
+                data_north = "59.672687"; data_south = "57.917234"; data_east = "9.668877"; data_west = "6.824533";
+            }
+            else if (admEnhet == "06")
+            {
+                data_north = "61.09172"; data_south = "59.407871"; data_east = "10.634994"; data_west = "7.438842";
+            }
+            else if (admEnhet == "20")
+            {
+                zoomLevel = "5";
+                data_north = "71.384879"; data_south = "68.554592"; data_east = "31.761485"; data_west = "20.479733";
+            }
+            else if (admEnhet == "04")
+            {
+                zoomLevel = "5";
+                data_north = "62.696928"; data_south = "59.840785"; data_east = "12.870849"; data_west = "9.583827";
+            }
+            else if (admEnhet == "12")
+            {
+                data_north = "61.035238"; data_south = "59.475421"; data_east = "7.732115"; data_west = "4.184771";
+            }
+            else if (admEnhet == "15")
+            {
+                data_north = "63.768169"; data_south = "61.956584"; data_east = "9.584212"; data_west = "4.816602";
+            }
+            else if (admEnhet == "17")
+            {
+                data_north = "65.470175"; data_south = "63.180687"; data_east = "14.325986"; data_west = "9.699817";
+            }
+            else if (admEnhet == "18")
+            {
+                zoomLevel = "5";
+                data_north = "69.596701"; data_south = "64.939497"; data_east = "18.151355"; data_west = "10.57806";
+            }
+            else if (admEnhet == "05")
+            {
+                data_north = "62.378402"; data_south = "60.13161"; data_east = "11.153986"; data_west = "7.34253";
+            }
+            else if (admEnhet == "21")
+            {
+                data_north = "60.135106"; data_south = "59.809311"; data_east = "10.951389"; data_west = "10.489165";
+            }
+            else if (admEnhet == "11")
+            {
+                data_north = "59.844574"; data_south = "58.027854"; data_east = "7.214667"; data_west = "4.454274";
+            }
+            else if (admEnhet == "14")
+            {
+                data_north = "62.382396"; data_south = "60.675548"; data_east = "8.322053"; data_west = "4.087526";
+            }
+            else if (admEnhet == "16")
+            {
+                data_north = "63.350279"; data_south = "63.343735"; data_east = "10.870418"; data_west = "10.854891";
+            }
+            else if (admEnhet == "08")
+            {
+                data_north = "60.188272"; data_south = "58.603311"; data_east = "9.969765"; data_west = "7.096288";
+            }
+            else if (admEnhet == "19")
+            {
+                data_north = "70.703616"; data_south = "68.356014"; data_east = "22.894466"; data_west = "15.592542";
+            }
+            else if (admEnhet == "10")
+            {
+                data_south = "57.759005"; data_east = "8.37168"; data_west = "6.149699";
+            }
+            else if (admEnhet == "07")
+            {
+                data_north = "59.701938"; data_south = "58.720455"; data_east = "10.67502"; data_west = "9.755336";
+            }
+            else if (admEnhet == "01")
+            {
+                data_north = "59.790586"; data_south = "58.76096"; data_east = "11.946004"; data_west = "10.536679";
+            }
+        }
+        else if (admEnhet.Length == 4) // Kommune
+        {
+            zoomLevel = "10";
+            string url = "http://register.dev.geonorge.no/api/v2/organisasjoner/kommuner";
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JArray.Parse(data);
+
+            foreach (var item in response)
+            {
+                var municipality = item["MunicipalityCode"];
+
+                if (municipality != null && municipality.ToString() == admEnhet)
+                {
+                    x = item["GeographicCenterX"].ToString();
+                    y = item["GeographicCenterY"].ToString();
+                }
+            }
+        }
+        }
+
+    var BBWest = @data_west;
+    var BBEast = @data_east;
+    var BBSouth = @data_south;
+    var BBNorth = @data_north;
 
     var zoomLevel = @zoomLevel;
 
-    var x = 284346;
-    var y = 6662017;
+    @if (admEnhet.Length == 4)
+    {
+        @:var xCenter = @x;
+        @:var yCenter = @y;
+   }
+    else
+    {
+        @:var xCenter = (BBWest + BBEast) /2;
+        @:var yCenter = (BBSouth + BBNorth) /2;
 
-        //console.log("x: " + x);
-        //console.log("y: " + y);
 
-        var iframe = document.createElement('iframe');
-        document.getElementById('maplayer').appendChild(iframe);
-        iframe.id = "iframe";
-        iframe.src= "http://norgeskart.no/geoportal/testing/dynamisk.html#" + zoomLevel + "/" + x +"/"+ y;
-        iframe.frameBorder=0;
-        iframe.height = "600";
-        win = document.getElementById("iframe").contentWindow;
+    @:$.ajax({
+    @:    dataType: "json",
+    @:  async: false,
+    @:   url: 'http://norgeskart.no/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
+    @:   success: function(result) {
+    @:       xCenter = Math.floor(result.ost);
+    @: yCenter = Math.floor(result.nord);
+    @: }
+    @: });
 
-        var wfsList = [];
+    }
 
-        loadWfs();
+
+    console.log("xCenter: " + xCenter);
+    console.log("yCenter: " + yCenter);
+
+    var iframe = document.createElement('iframe');
+    document.getElementById('maplayer').appendChild(iframe);
+    iframe.id = "iframe";
+    iframe.src= "http://norgeskart.no/geoportal/testing/dynamisk.html#" + zoomLevel + "/" + xCenter +"/"+ yCenter;
+    iframe.frameBorder=0;
+    iframe.height = "600";
+    win = document.getElementById("iframe").contentWindow;
+
+    var wfsList = [];
+
+    loadWfs();
 
     function AddMarker(x, y, title)
     {
@@ -60,12 +204,12 @@
 
     function loadWfs() {
         $.ajax({
-            headers: {          
+            headers: {
                 Accept: "application/rdf+xml",
-                "Content-Type": "text/plain; charset=utf-8"   
-            },    
+                "Content-Type": "text/plain; charset=utf-8"
+            },
             type: "GET",
-            url: "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=06&bredde=200",
+            url: "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=@admEnhet&bredde=200",
             success: setWfs
         });
     }
@@ -75,7 +219,7 @@
 
         $(xml).find("wfs\\:member, member").each(function () {
             var pos = $(this).find("gml\\:pos, pos").text();
-            
+
             console.log(pos);
 
             var coords = pos.split(' ');
@@ -101,11 +245,11 @@
 
             wfsList.push({ x: x, y: y, title: "HC-parkeringsplass bredde < 200 cm" });
 
-            console.log("----------------------------------------------------");    
+            console.log("----------------------------------------------------");
 
         });
     }
 
-    
+
 
 </script>
