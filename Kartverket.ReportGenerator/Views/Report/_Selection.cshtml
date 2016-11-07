@@ -6,32 +6,31 @@
         <p>
             Velg område:
         </p>
-        <div class="form-group">
-            <div class="input-group chosen-input-group input-group-omraade">
-                <select required data-placeholder="Klikk for å velge område" name="areas" class="chosen-select form-control selectOmraader">
-                    <option @(((IList<string>)ViewBag.selectedAreas).Contains("Hele landet") ? "selected" : "")>Hele landet</option>
-                    <optgroup label="Fylke">
-                        @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)
-                        {
-                            <option value="@fylke.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(fylke.Key) ? "selected" : "")>@fylke.Value</option>
-                        }
-                    </optgroup>
-                    <optgroup label="Kommuner">
-                        @foreach (KeyValuePair<String, String> kommune in ViewBag.kommuner)
-                        {
-                            <option value="@kommune.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(kommune.Key) ? "selected" : "")>@kommune.Value</option>
-                        }
-                    </optgroup>
-                </select>
-            </div>
+        <div class="custom-select">
+            <select required data-placeholder="Klikk for å velge område" name="areas" class="chosen-select form-control selectOmraader">
+                <option></option>
+                <option @(((IList<string>)ViewBag.selectedAreas).Contains("Hele landet") ? "selected" : "")>Hele landet</option>
+                <optgroup label="Fylke">
+                    @foreach (KeyValuePair<String, String> fylke in ViewBag.fylker)
+                    {
+                        <option value="@fylke.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(fylke.Key) ? "selected" : "")>@fylke.Value</option>
+                    }
+                </optgroup>
+                <optgroup label="Kommuner">
+                    @foreach (KeyValuePair<String, String> kommune in ViewBag.kommuner)
+                    {
+                        <option value="@kommune.Key" @(((IList<string>)ViewBag.selectedAreas).Contains(kommune.Key) ? "selected" : "")>@kommune.Value</option>
+                    }
+                </optgroup>
+            </select>
         </div>
     </div>
     <div class="col-md-3">
         <p>
             Velg data:
         </p>
-        <div class="form-group custom-select">
-            <select required class="form-control" name="data">
+        <div class="custom-select">
+            <select required data-placeholder="Klikk for å velge data" class="chosen-select form-control" name="data">
                 <option></option>
                 <optgroup label="Datapakker">
                     <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" : "")>Det offentlige kartgrunnlaget</option>
@@ -46,8 +45,8 @@
         <p>
             Velg spørring:
         </p>
-        <div class="form-group custom-select">
-            <select required name="query" class="form-control" data-placeholder="Velg spørring">
+        <div class="custom-select">
+            <select required name="query" class="chosen-select form-control" data-placeholder="Klikk for å velge spørring">
                 <option></option>
                 <option @(ViewBag.query == "Antall DOK-datasett valgt og tillegg pr kommune" ? "selected" :"")>Antall DOK-datasett valgt og tillegg pr kommune</option>
                 <option @(ViewBag.query == "Valgte DOK-datasett pr tema" ? "selected" :"")>Valgte DOK-datasett pr tema</option>
