@@ -202,6 +202,7 @@
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.Designer.cs">
       <DependentUpon>201608231237117_DataTypeRenameConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\QueryConfig.cs" />
     <Compile Include="Services\ExcelReportGenerator.cs" />
     <Compile Include="Services\IRegisterService.cs" />
     <Compile Include="Services\IReportService.cs" />

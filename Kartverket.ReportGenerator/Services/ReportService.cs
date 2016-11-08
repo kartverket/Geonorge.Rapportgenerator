@@ -26,7 +26,7 @@ namespace Kartverket.ReportGenerator.Services
 
         public ReportResult GetQueryResult(ReportApi.ReportQuery query = null)
         {
-            if (query.QueryName.Contains("DOK-datasett"))
+            if (query.QueryName.StartsWith("register-"))
             {
                 return GetRegistryQueryResult(query);
             } else

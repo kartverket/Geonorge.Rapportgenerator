@@ -2,7 +2,7 @@
 @model Kartverket.ReportApi.ReportResult
 <script src="~/Scripts/Chart.js"></script>
 @{int height = 200; }
-@if (ViewBag.query != "DOK-datasett dekning og valgt pr kommune")
+@if (ViewBag.query != "register-DOK-coverage")
 {
     int numberOfRows = Model.Data.Count;
     int rowHeight = 7;
@@ -13,19 +13,19 @@
 <script>
 @{ string label1 = ViewBag.query;
     string label2 = "";
-    if (label1 == "Antall DOK-datasett valgt og tillegg pr kommune")
+    if (label1 == "register-DOK-selectedAndAdditional")
     {
         label1 = "Antall DOK-datasett valgt";
         label2 = "Antall tilleggsdataset valgt";
     }
-    else if (label1 == "Valgte DOK-datasett pr tema")
+    else if (label1 == "register-DOK-selectedTheme")
     {
         label1 = "Antall kommuner på landsbasis som har valgt datasettet";
     }
 
 }
     var dataLabels = [];
-    @if (ViewBag.query == "Valgte DOK-datasett pr tema")
+    @if (ViewBag.query == "register-DOK-selectedTheme")
     {
         foreach (var d in Model.Data.ToList())
         {

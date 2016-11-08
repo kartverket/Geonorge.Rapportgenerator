@@ -1,4 +1,5 @@
 ﻿@using System.Linq
+
 @using (Html.BeginForm("Details", "Report", FormMethod.Post, new { id = "queryform" }))
 {
 <div class="row">
@@ -30,14 +31,7 @@
             Velg data:
         </p>
         <div class="custom-select">
-            <select required data-placeholder="Klikk for å velge data" class="chosen-select form-control" name="data">
-                <option></option>
-                <optgroup label="Datapakker">
-                    <option @(ViewBag.data == "Det offentlige kartgrunnlaget" ? "selected" : "")>Det offentlige kartgrunnlaget</option>
-                </optgroup>
-                <optgroup label="Tema">
-                    <option @(ViewBag.data == "HC-parkeringsplasser" ? "selected" : "")>HC-parkeringsplasser</option>
-                </optgroup>
+            <select required data-placeholder="Klikk for å velge data" class="chosen-select form-control" id="data" name="data" onchange="getQueries();">
             </select>
         </div>
     </div>
@@ -46,12 +40,7 @@
             Velg spørring:
         </p>
         <div class="custom-select">
-            <select required name="query" class="chosen-select form-control" data-placeholder="Klikk for å velge spørring">
-                <option></option>
-                <option @(ViewBag.query == "Antall DOK-datasett valgt og tillegg pr kommune" ? "selected" :"")>Antall DOK-datasett valgt og tillegg pr kommune</option>
-                <option @(ViewBag.query == "Valgte DOK-datasett pr tema" ? "selected" :"")>Valgte DOK-datasett pr tema</option>
-                <option @(ViewBag.query == "DOK-datasett dekning og valgt pr kommune" ? "selected" :"")>DOK-datasett dekning og valgt pr kommune</option>
-                <option @(ViewBag.query == "Bredde < 200 cm" ? "selected" : "")>Bredde < 200 cm</option>
+            <select required name="query" id="query" class="chosen-select form-control" data-placeholder="Klikk for å velge spørring">
             </select>
         </div>
     </div>
@@ -64,3 +53,57 @@
     </div>
 </div>
 }
+
+<script>
+    var model = '@Html.Raw(Json.Encode(ViewBag.Queries))';
+    var selectedData = '@ViewBag.data';
+    var selectedQuery = '@ViewBag.query';
+    var $dataSelect = $('#data');
+    $dataSelect.find('option').remove();
+    $dataSelect.append('<option></option>');
+    var prevGroup, $group = $();
+    $.each(JSON.parse(model), function (i, v) {
+        group = v.Data.Group.Value;
+        if (group != prevGroup) {
+            $group = $('<optgroup />', { label: group }).appendTo('#data');
+        }
+        if (!$("#data option[value='" + v.Data.Value + "']").length > 0)
+        {
+            $group.append($('<option />', {
+                text: v.Data.Name,
+                value: v.Data.Value
+            }));
+        }
+     prevGroup = group;
+
+    });
+
+    if (selectedData != "")
+        $("#data").val(selectedData).find("option[value=" + selectedData + "]").attr('selected', true);
+    @if (!string.IsNullOrEmpty(ViewBag.data))
+    {
+        @: getQueries();
+    }
+    if (selectedQuery != "")
+        $("#query").val(selectedQuery).find("option[value=" + selectedQuery + "]").attr('selected', true);
+
+    $dataSelect.trigger("chosen:updated");
+
+    function getQueries()
+    {
+        var selectedData = $("#data option:selected").val();
+        console.log("selectedData:"+selectedData);
+
+        var $querySelect = $('#query');
+        $querySelect.find('option').remove();
+        $querySelect.append('<option></option>');
+        $.each(JSON.parse(model), function (i, v) {
+            console.log(v.Data.Value + ":" + selectedData);
+            if (v.Data.Value == selectedData) {
+                $querySelect.append('<option value=' + v.Value + '>' + v.Name + '</option>');
+            }
+        });
+
+        $querySelect.trigger("chosen:updated");
+    }
+</script>
