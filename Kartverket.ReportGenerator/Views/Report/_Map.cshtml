@@ -1,4 +1,5 @@
-﻿@if (!ViewBag.query.StartsWith("register-"))
+﻿@using System.Web.Configuration;
+@if (!ViewBag.query.StartsWith("register-"))
 {
 <div id="maplayer">
 </div>
@@ -10,7 +11,7 @@
     function postMessage(msg) {
         var message = JSON.stringify(msg);
         try{
-            win.postMessage(message,'http://norgeskart.no');
+            win.postMessage(message,'@WebConfigurationManager.AppSettings["MapUrl"]');
         }
         catch(e) {}
     }
@@ -118,7 +119,7 @@
         else if (admEnhet.Length == 4) // Kommune
         {
             zoomLevel = "10";
-            string url = "http://register.dev.geonorge.no/api/v2/organisasjoner/kommuner";
+            string url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/v2/organisasjoner/kommuner";
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             var data = c.DownloadString(url);
@@ -158,7 +159,7 @@
     @:$.ajax({
     @:    dataType: "json",
     @:  async: false,
-    @:   url: 'http://norgeskart.no/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
+    @:   url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
     @:   success: function(result) {
     @:       xCenter = Math.floor(result.ost);
     @: yCenter = Math.floor(result.nord);
@@ -167,14 +168,10 @@
 
     }
 
-
-    console.log("xCenter: " + xCenter);
-    console.log("yCenter: " + yCenter);
-
     var iframe = document.createElement('iframe');
     document.getElementById('maplayer').appendChild(iframe);
     iframe.id = "iframe";
-    iframe.src= "http://norgeskart.no/geoportal/testing/dynamisk.html#" + zoomLevel + "/" + xCenter +"/"+ yCenter;
+    iframe.src= "@WebConfigurationManager.AppSettings["MapUrlDynamic"]/dynamisk.html#" + zoomLevel + "/" + xCenter +"/"+ yCenter;
     iframe.frameBorder=0;
     iframe.height = "600";
     win = document.getElementById("iframe").contentWindow;
@@ -229,25 +226,17 @@
             x = coords[0];
             y = coords[1];
 
-            console.log("xCoord:"+x);
-            console.log("yCoord:"+y);
-
             $.ajax({
                 dataType: "json",
                 async: false,
-                url: 'http://norgeskart.no/ws/trans.py?ost=' + y + '&nord=' + x + '&sosiKoordSys=84&resSosiKoordSys=23',
+                url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + y + '&nord=' + x + '&sosiKoordSys=84&resSosiKoordSys=23',
                 success: function(result) {
                     x = Math.floor(result.ost);
                     y = Math.floor(result.nord);
                 }
             });
 
-            console.log("xTrans:"+x);
-            console.log("yTrans:"+y);
-
             wfsList.push({ x: x, y: y, title: "HC-parkeringsplass bredde < 200 cm" });
-
-            console.log("----------------------------------------------------");
 
         });
     }
