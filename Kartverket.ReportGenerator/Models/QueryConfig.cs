@@ -67,6 +67,16 @@ namespace Kartverket.ReportGenerator.Models
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=16&bredde=200"
                 }
             );
+
+            queries.Add(
+                new Query
+                {
+                    Data = HC_Parking,
+                    Value = "HCPlasserPrAdmEnhetForMaksLengde",
+                    Name = "Lengde < 600 cm",
+                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksLengde&admEnhNr=16&lengde=600"
+                }
+            );
         }
 
         public List<Query> GetQueries()

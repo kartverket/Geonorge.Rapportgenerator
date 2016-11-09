@@ -69,7 +69,7 @@ namespace Kartverket.ReportGenerator.Services
                 reportResultData.Label = admUnits.ContainsKey(area) ? admUnits[area] : area;
                 reportResultData.TotalDataCount = resultTotal.numberMatched;
                 ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
-                reportResultDataValue.Key = queryInfo.Name;
+                reportResultDataValue.Key = queryInfo.Data.Name;
                 reportResultDataValue.Value = result.numberMatched.ToString();
                 reportResultDataValues.Add(reportResultDataValue);
 
