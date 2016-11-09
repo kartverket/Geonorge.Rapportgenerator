@@ -2,7 +2,7 @@
 @model Kartverket.ReportApi.ReportResult
 <script src="~/Scripts/Chart.js"></script>
 @{int height = 200; }
-@if (ViewBag.query != "register-DOK-coverage")
+@if (ViewBag.query.Value != "register-DOK-coverage")
 {
     int numberOfRows = Model.Data.Count;
     int rowHeight = 7;
@@ -11,7 +11,7 @@
 
 <canvas id="myChart" width="400" height="@height"></canvas>
 <script>
-@{ string label1 = ViewBag.query;
+@{ string label1 = ViewBag.query.Value;
     string label2 = "";
     if (label1 == "register-DOK-selectedAndAdditional")
     {
@@ -25,7 +25,7 @@
 
 }
     var dataLabels = [];
-    @if (ViewBag.query == "register-DOK-selectedTheme")
+    @if (ViewBag.query.Value == "register-DOK-selectedTheme")
     {
         foreach (var d in Model.Data.ToList())
         {

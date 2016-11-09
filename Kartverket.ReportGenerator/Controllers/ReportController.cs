@@ -32,22 +32,22 @@ namespace Kartverket.ReportGenerator.Controllers
             ViewBag.fylker = _registerService.GetFylker();
             ViewBag.kommuner = _registerService.GetKommuner();
             ViewBag.selectedAreas = new string[]{};
-            ViewBag.data = "";
-            ViewBag.query = "";
             return View();
         }
 
         public ActionResult Details(string[] areas, string data, string query, string action)
         {
-            ViewBag.Queries = new QueryConfig().GetQueries();
+            var queries = new QueryConfig();
+            ViewBag.Queries = queries.GetQueries();
             ViewBag.fylker = _registerService.GetFylker();
             ViewBag.kommuner = _registerService.GetKommuner();
             ViewBag.selectedAreas = areas;
             ViewBag.data = data;
-            ViewBag.query = query;
+            var queryConfig = queries.GetQuery(query);
+            ViewBag.query = queryConfig;
             ReportQuery reportQuery = new ReportQuery();
             reportQuery.Parameters = new List<ReportQueryParameter>();
-            reportQuery.QueryName = query;
+            reportQuery.QueryName = queryConfig.Value;
             foreach (string area in areas)
             {
                 reportQuery.Parameters.Add(new ReportQueryParameter { Name = "area", Value = area });

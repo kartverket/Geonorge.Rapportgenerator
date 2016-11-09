@@ -38,7 +38,10 @@ namespace Kartverket.ReportGenerator.Services
 
         private ReportResult GetWfsUURegistryQueryResult(ReportQuery query)
         {
-            //testing
+            var queryInfo = new QueryConfig().GetQuery(query.QueryName);
+            string reportStoredQuery = queryInfo.QueryUrl;
+            string reportStoredQueryTotal = queryInfo.Data.QueryUrl;
+
             var fylker = _registerService.GetFylker();
             var kommuner = _registerService.GetKommuner();
             var admUnits = fylker.Union(kommuner).ToDictionary(k => k.Key, v => v.Value);
@@ -53,8 +56,6 @@ namespace Kartverket.ReportGenerator.Services
             {
                 string areaUnit = (area == "Hele landet" ? "*" : area);
 
-                string reportStoredQuery = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=16&bredde=200";
-                string reportStoredQueryTotal = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhet&admEnhNr=16";
                 reportStoredQuery = SetAdmEnhNr(reportStoredQuery, areaUnit);
                 reportStoredQueryTotal = SetAdmEnhNr(reportStoredQueryTotal, areaUnit);
 
@@ -68,7 +69,7 @@ namespace Kartverket.ReportGenerator.Services
                 reportResultData.Label = admUnits.ContainsKey(area) ? admUnits[area] : area;
                 reportResultData.TotalDataCount = resultTotal.numberMatched;
                 ReportResultDataValue reportResultDataValue = new ReportResultDataValue();
-                reportResultDataValue.Key = "HC-parkeringsplasser";
+                reportResultDataValue.Key = queryInfo.Name;
                 reportResultDataValue.Value = result.numberMatched.ToString();
                 reportResultDataValues.Add(reportResultDataValue);
 

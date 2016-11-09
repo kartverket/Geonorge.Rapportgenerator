@@ -1,5 +1,5 @@
 ﻿@using System.Web.Configuration;
-@if (!ViewBag.query.StartsWith("register-"))
+@if (!ViewBag.query.Value.StartsWith("register-"))
 {
 <div id="maplayer">
 </div>
@@ -136,6 +136,16 @@
                 }
             }
         }
+
+        var queryUrl = ViewBag.query.QueryUrl;
+        Uri uri = new Uri(queryUrl);
+        System.Collections.Specialized.NameValueCollection nvc = HttpUtility.ParseQueryString(uri.Query);
+        nvc["admEnhNr"] = (admEnhet ?? "").ToString();
+        nvc["resultType"] = "";
+        Uri newUri = new UriBuilder(uri) { Query = nvc.ToString() }.Uri;
+
+        queryUrl = newUri.ToString();
+
         }
 
     var BBWest = @data_west;
@@ -148,23 +158,23 @@
     @if (admEnhet.Length == 4)
     {
         @:var xCenter = @x;
-        @:var yCenter = @y;
-   }
+            @:var yCenter = @y;
+       }
     else
     {
         @:var xCenter = (BBWest + BBEast) /2;
-        @:var yCenter = (BBSouth + BBNorth) /2;
+            @:var yCenter = (BBSouth + BBNorth) /2;
 
 
     @:$.ajax({
-    @:    dataType: "json",
-    @:  async: false,
-    @:   url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
-    @:   success: function(result) {
-    @:       xCenter = Math.floor(result.ost);
-    @: yCenter = Math.floor(result.nord);
-    @: }
-    @: });
+            @:    dataType: "json",
+            @:  async: false,
+            @:   url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
+            @:   success: function(result) {
+                @:       xCenter = Math.floor(result.ost);
+                @: yCenter = Math.floor(result.nord);
+                @: }
+            @: });
 
     }
 
@@ -208,7 +218,7 @@
                 "Content-Type": "text/plain; charset=utf-8"
             },
             type: "GET",
-            url: "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=@admEnhet&bredde=200",
+            url: "@Html.Raw(queryUrl)",
             success: setWfs
         });
     }
@@ -236,7 +246,7 @@
                 }
             });
 
-            wfsList.push({ x: x, y: y, title: "HC-parkeringsplass bredde < 200 cm" });
+            wfsList.push({ x: x, y: y, title: '@Html.Raw(ViewBag.query.Name)' });
 
         });
     }
