@@ -82,6 +82,46 @@ namespace Kartverket.ReportGenerator.Models
                 new Query
                 {
                     Data = HC_Parking,
+                    Value = "HCPlasserPrAdmEnhetRullestolTilgjengelig",
+                    Name = "Tilgjgengelighet man. rullestol = Tilgjengelig",
+                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=tilgjengelig"
+                }
+            );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetRullestolIkkeTilgjengelig",
+                   Name = "Tilgjgengelighet man. rullestol = Ikke tilgjengelig",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=ikkeTilgjengelig"
+               }
+           );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetRullestolVanskeligTilgjengelig",
+                   Name = "Tilgjgengelighet man. rullestol = vanskelig tilgjengelig",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=vanskeligTilgjengelig"
+               }
+           );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetRullestolIkkeVurdert",
+                   Name = "Tilgjgengelighet man. rullestol = ikke vurdert",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=ikkeVurdert"
+               }
+           );
+
+            queries.Add(
+                new Query
+                {
+                    Data = HC_Parking,
                     Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
                     Name = "Tilgjgengelighet el. rullestol = Tilgjengelig",
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=tilgjengelig"
@@ -105,6 +145,16 @@ namespace Kartverket.ReportGenerator.Models
                    Value = "HCPlasserPrAdmEnhetElRullestolVanskeligTilgjengelig",
                    Name = "Tilgjgengelighet el. rullestol = vanskelig tilgjengelig",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=vanskeligTilgjengelig"
+               }
+           );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetElRullestolIkkeVurdert",
+                   Name = "Tilgjgengelighet el. rullestol = ikke vurdert",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=ikkeVurdert"
                }
            );
 
