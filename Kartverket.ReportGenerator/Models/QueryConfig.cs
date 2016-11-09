@@ -77,6 +77,37 @@ namespace Kartverket.ReportGenerator.Models
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksLengde&admEnhNr=16&lengde=600"
                 }
             );
+
+            queries.Add(
+                new Query
+                {
+                    Data = HC_Parking,
+                    Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
+                    Name = "Tilgjgengelighet el. rullestol = Tilgjengelig",
+                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=tilgjengelig"
+                }
+            );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetElRullestolIkkeTilgjengelig",
+                   Name = "Tilgjgengelighet el. rullestol = Ikke tilgjengelig",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=ikkeTilgjengelig"
+               }
+           );
+
+            queries.Add(
+               new Query
+               {
+                   Data = HC_Parking,
+                   Value = "HCPlasserPrAdmEnhetElRullestolVanskeligTilgjengelig",
+                   Name = "Tilgjgengelighet el. rullestol = vanskelig tilgjengelig",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=vanskeligTilgjengelig"
+               }
+           );
+
         }
 
         public List<Query> GetQueries()
