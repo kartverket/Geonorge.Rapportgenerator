@@ -194,7 +194,7 @@
     {
         for (var i = 0; i < wfsList.length; i ++ ){
             console.log("addMarker:"+wfsList[i].x + "," + wfsList[i].y);
-            postMessage({ "cmd":"addMarker","x":wfsList[i].x + i,"y":wfsList[i].y + 1,"title":wfsList[i].title} );
+            postMessage({ "cmd":"addMarker","x":wfsList[i].x ,"y":wfsList[i].y,"title":wfsList[i].title} );
         }
     }
 
