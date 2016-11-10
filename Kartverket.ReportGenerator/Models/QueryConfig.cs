@@ -158,6 +158,24 @@ namespace Kartverket.ReportGenerator.Models
                }
            );
 
+            Data InngangBygg = new Data
+            {
+                Group = theme,
+                Value = "inngangbygg",
+                Name = "Inngang bygg",
+                QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getInngangByggPrAdmEnhet&admEnhNr=16"
+            };
+
+            queries.Add(
+               new Query
+               {
+                   Data = InngangBygg,
+                   Value = "InngangByggPrAdmEnhetAvstandHCParkering",
+                   Name = "Avstand HC-parkeringsplass > 25 m",
+                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getInngangByggPrAdmEnhetAvstandHCParkering&admEnhNr=03&avstandHC=25"
+               }
+           );
+
         }
 
         public List<Query> GetQueries()
