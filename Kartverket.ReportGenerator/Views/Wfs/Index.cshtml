@@ -1,0 +1,22 @@
+﻿@using Kartverket.ReportGenerator.Models
+@{
+    ViewBag.Title = "Stored queries";
+}
+
+<h2>Test: ListStoredQueries</h2>
+<b>Url:</b> http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?
+
+<table border="1">
+    <tr>
+        <th>Spørring/tittel</th><th>Stored query</th><th>Stored query for total(STOREDQUERY_ID inneholder getAntall)</th>
+    </tr>
+    @foreach(var item in (List<QueryData>)ViewBag.StoredQueries)
+    {
+    <tr>
+        <td>@item.Title</td>
+        <td><a href="@item.QueryUrl" target="_blank">@item.QueryUrl</a></td>
+        <td><a href="@item.QueryUrlTotal" target="_blank">@item.QueryUrlTotal</a></td>
+    </tr>
+    }
+</table>
+
