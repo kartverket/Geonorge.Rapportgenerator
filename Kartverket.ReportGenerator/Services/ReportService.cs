@@ -38,7 +38,7 @@ namespace Kartverket.ReportGenerator.Services
 
         private ReportResult GetWfsUURegistryQueryResult(ReportQuery query)
         {
-            var queryInfo = new QueryConfig().GetQuery(query.QueryName);
+            var queryInfo = QueryConfig.GetQuery(query.QueryName);
             string reportStoredQuery = queryInfo.QueryUrl;
             string reportStoredQueryTotal = queryInfo.Data.QueryUrl;
 

@@ -28,7 +28,7 @@ namespace Kartverket.ReportGenerator.Controllers
         
         public ActionResult Index()
         {
-            ViewBag.Queries = new QueryConfig().GetQueries();
+            ViewBag.Queries = QueryConfig.GetQueries();
             ViewBag.fylker = _registerService.GetFylker();
             ViewBag.kommuner = _registerService.GetKommuner();
             ViewBag.selectedAreas = new string[]{};
@@ -37,13 +37,12 @@ namespace Kartverket.ReportGenerator.Controllers
 
         public ActionResult Details(string[] areas, string data, string query, string action)
         {
-            var queries = new QueryConfig();
-            ViewBag.Queries = queries.GetQueries();
+            ViewBag.Queries = QueryConfig.GetQueries();
             ViewBag.fylker = _registerService.GetFylker();
             ViewBag.kommuner = _registerService.GetKommuner();
             ViewBag.selectedAreas = areas;
             ViewBag.data = data;
-            var queryConfig = queries.GetQuery(query);
+            var queryConfig = QueryConfig.GetQuery(query);
             ViewBag.query = queryConfig;
             ReportQuery reportQuery = new ReportQuery();
             reportQuery.Parameters = new List<ReportQueryParameter>();

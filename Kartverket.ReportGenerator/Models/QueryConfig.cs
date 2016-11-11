@@ -8,11 +8,11 @@ using System.Web.Configuration;
 namespace Kartverket.ReportGenerator.Models
 {
 
-    public class QueryConfig
+    public static class QueryConfig
     {
-        List<Query> queries;
+        static List<Query> queries;
 
-        public QueryConfig()
+        static QueryConfig()
         {
             queries = new List<Query>();
 
@@ -178,12 +178,12 @@ namespace Kartverket.ReportGenerator.Models
 
         }
 
-        public List<Query> GetQueries()
+        public static List<Query> GetQueries()
         {
             return queries.ToList();
         }
 
-        public Query GetQuery(string value)
+        public static Query GetQuery(string value)
         {
             return queries.Where(q => q.Value == value).FirstOrDefault();
         }
