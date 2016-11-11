@@ -16,10 +16,7 @@ namespace Kartverket.ReportGenerator.Models
         {
             queries = new List<Query>();
 
-            Group datapackage = new Group { Name = "datapackage", Value = "Datapakker" };
-            Group theme = new Group { Name = "theme", Value = "Tema" };
-
-            Data DOK = new Data { Group = datapackage, Value = "register-DOK", Name = "Det offentlige kartgrunnlaget" };
+            Data DOK = new Data { Value = "register-DOK", Name = "Det offentlige kartgrunnlaget" };
 
             queries.Add(
                 new Query
@@ -50,18 +47,17 @@ namespace Kartverket.ReportGenerator.Models
             );
 
 
-            Data HC_Parking = new Data
+            Data Tilgjengelighet_tettsted = new Data
             {
-                Group = theme,
-                Value = "hc-parking",
-                Name = "HC-parkeringsplasser",
+                Value = "9c075b5d-1fb5-414e-aaf5-c6390db896d1",
+                Name =  "Tilgjengelighet - tettsted",
                 QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhet&admEnhNr=16"
             };
 
             queries.Add(
                 new Query
                 {
-                    Data = HC_Parking,
+                    Data = Tilgjengelighet_tettsted,
                     Value = "HCPlasserPrAdmEnhetForMaksBredde",
                     Name = "Bredde < 200 cm",
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksBredde&admEnhNr=16&bredde=200"
@@ -71,7 +67,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                 new Query
                 {
-                    Data = HC_Parking,
+                    Data = Tilgjengelighet_tettsted,
                     Value = "HCPlasserPrAdmEnhetForMaksLengde",
                     Name = "Lengde < 600 cm",
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetForMaksLengde&admEnhNr=16&lengde=600"
@@ -81,7 +77,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                 new Query
                 {
-                    Data = HC_Parking,
+                    Data = Tilgjengelighet_tettsted,
                     Value = "HCPlasserPrAdmEnhetRullestolTilgjengelig",
                     Name = "Tilgjgengelighet man. rullestol = Tilgjengelig",
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=tilgjengelig"
@@ -91,7 +87,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetRullestolIkkeTilgjengelig",
                    Name = "Tilgjgengelighet man. rullestol = Ikke tilgjengelig",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=ikkeTilgjengelig"
@@ -101,7 +97,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetRullestolVanskeligTilgjengelig",
                    Name = "Tilgjgengelighet man. rullestol = vanskelig tilgjengelig",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=vanskeligTilgjengelig"
@@ -111,7 +107,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetRullestolIkkeVurdert",
                    Name = "Tilgjgengelighet man. rullestol = ikke vurdert",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetRullestol&admEnhNr=03&tilgjengvurderingRullestol=ikkeVurdert"
@@ -121,7 +117,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                 new Query
                 {
-                    Data = HC_Parking,
+                    Data = Tilgjengelighet_tettsted,
                     Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
                     Name = "Tilgjgengelighet el. rullestol = Tilgjengelig",
                     QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=tilgjengelig"
@@ -131,7 +127,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetElRullestolIkkeTilgjengelig",
                    Name = "Tilgjgengelighet el. rullestol = Ikke tilgjengelig",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=ikkeTilgjengelig"
@@ -141,7 +137,7 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetElRullestolVanskeligTilgjengelig",
                    Name = "Tilgjgengelighet el. rullestol = vanskelig tilgjengelig",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=vanskeligTilgjengelig"
@@ -151,28 +147,10 @@ namespace Kartverket.ReportGenerator.Models
             queries.Add(
                new Query
                {
-                   Data = HC_Parking,
+                   Data = Tilgjengelighet_tettsted,
                    Value = "HCPlasserPrAdmEnhetElRullestolIkkeVurdert",
                    Name = "Tilgjgengelighet el. rullestol = ikke vurdert",
                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03&tilgjengvurderingElRull=ikkeVurdert"
-               }
-           );
-
-            Data InngangBygg = new Data
-            {
-                Group = theme,
-                Value = "inngangbygg",
-                Name = "Inngang bygg",
-                QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getInngangByggPrAdmEnhet&admEnhNr=16"
-            };
-
-            queries.Add(
-               new Query
-               {
-                   Data = InngangBygg,
-                   Value = "InngangByggPrAdmEnhetAvstandHCParkering",
-                   Name = "Avstand HC-parkeringsplass > 25 m",
-                   QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getInngangByggPrAdmEnhetAvstandHCParkering&admEnhNr=03&avstandHC=25"
                }
            );
 
@@ -189,18 +167,12 @@ namespace Kartverket.ReportGenerator.Models
         }
     }
 
-    public class Group
-    {
-        public string Value { get; set; }
-        public string Name { get; set; }
-    }
 
     public class Data
     {
         public string Value { get; set; }
         public string Name { get; set; }
         public string QueryUrl { get; set; }
-        public Group Group { get; set; }
     }
 
     public class Query
