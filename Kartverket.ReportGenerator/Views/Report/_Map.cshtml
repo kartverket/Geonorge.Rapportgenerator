@@ -232,18 +232,8 @@
 
             var coords = pos.split(' ');
 
-            x = coords[0];
-            y = coords[1];
-
-            $.ajax({
-                dataType: "json",
-                async: false,
-                url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + y + '&nord=' + x + '&sosiKoordSys=84&resSosiKoordSys=23',
-                success: function(result) {
-                    x = Math.floor(result.ost);
-                    y = Math.floor(result.nord);
-                }
-            });
+            x = Math.floor(coords[0]);
+            y = Math.floor(coords[1]);
 
             wfsList.push({ x: x, y: y, title: '@Html.Raw(ViewBag.query.Name)' });
 
