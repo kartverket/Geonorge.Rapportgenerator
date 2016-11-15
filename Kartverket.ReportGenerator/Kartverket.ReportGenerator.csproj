@@ -223,6 +223,7 @@
     <Compile Include="Models\ReportDbContext.cs" />
     <Compile Include="Models\ConfigReportQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MetadataService.cs" />
     <Compile Include="Services\RegisterService.cs" />
     <Compile Include="Services\ReportService.cs" />
   </ItemGroup>

@@ -16,7 +16,7 @@ namespace Kartverket.ReportGenerator.Models
         {
             queries = new List<Query>();
 
-            Data DOK = new Data { Value = "register-DOK", Name = "Det offentlige kartgrunnlaget" };
+            Data DOK = new Data { Value = "e4eb3a1d-481e-45a2-8a58-ead15240a9b0", Name = "Det offentlige kartgrunnlaget" };
 
             queries.Add(
                 new Query
