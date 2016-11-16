@@ -24,6 +24,30 @@ namespace Kartverket.ReportGenerator.Services
             _registerService = registerService;
         }
 
+        public QueryConfig GetQueries()
+        {
+            QueryConfig config = new QueryConfig();
+            var metadataService = new MetadataService();
+            var metadata = metadataService.GetMetadata("9c075b5d-1fb5-414e-aaf5-c6390db896d1"); // todo get from db
+            var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related);
+            var SqUrl = metadataService.GetListStoredQueriesUrl(wfsUrl);
+            var queries = new Wfs().GetStoredQueries(SqUrl);
+            foreach (var query in queries)
+            {
+                config.AddQuery(new Query
+                {
+                    Data = new Data { Value = metadata.Uuid, Name = metadata.Title, QueryUrl = query.QueryUrlTotal }
+                    ,
+                    Name = query.Title,
+                    Value = query.Title.Replace(' ', '_'),
+                    QueryUrl = query.QueryUrl
+                }
+                );
+            }
+
+            return config;
+        }
+
         public ReportResult GetQueryResult(ReportApi.ReportQuery query = null)
         {
             if (query.QueryName.StartsWith("register-"))
@@ -38,7 +62,8 @@ namespace Kartverket.ReportGenerator.Services
 
         private ReportResult GetWfsUURegistryQueryResult(ReportQuery query)
         {
-            var queryInfo = QueryConfig.GetQuery(query.QueryName);
+            var queryList = GetQueries();
+            var queryInfo = queryList.GetQuery(query.QueryName);
             string reportStoredQuery = queryInfo.QueryUrl;
             string reportStoredQueryTotal = queryInfo.Data.QueryUrl;
 

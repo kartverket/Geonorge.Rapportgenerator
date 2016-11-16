@@ -12,15 +12,16 @@ namespace Kartverket.ReportGenerator.Models
 {
     public class Wfs
     {
-        string url = "http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0";
+        string url;
 
-        public List<QueryData> GetStoredQueries()
-        { 
+        public List<QueryData> GetStoredQueries(string url)
+        {
+        this.url = url; 
         var client = new HttpClient();
         client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
-            HttpResponseMessage response = client.GetAsync(url + "&request=ListStoredQueries").Result;
+            HttpResponseMessage response = client.GetAsync(url).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -37,7 +38,7 @@ namespace Kartverket.ReportGenerator.Models
             return null;
         }
 
-        public List<QueryData> ParseStoredQueries(ListStoredQueriesResponse list)
+        List<QueryData> ParseStoredQueries(ListStoredQueriesResponse list)
         {
             List<QueryData> qList = new List<QueryData>();
             string type, typePrev = "", queryUrlTotal = "";
@@ -46,10 +47,10 @@ namespace Kartverket.ReportGenerator.Models
             {
                 QueryData qData = new QueryData();
                 qData.Title = list.StoredQuery[q].Title;
-                qData.QueryUrl = url + "&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
+                qData.QueryUrl = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
                 type = list.StoredQuery[q].ReturnFeatureType[0].ToString();
                 if(type != typePrev && list.StoredQuery[q].id.Contains("getAntall"))
-                    queryUrlTotal = url + "&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
+                    queryUrlTotal = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
 
                 qData.QueryUrlTotal = queryUrlTotal;
                 if(!list.StoredQuery[q].id.Contains("getAntall"))
@@ -58,6 +59,16 @@ namespace Kartverket.ReportGenerator.Models
                 typePrev = type;
             }
             return qList;
+        }
+
+        string RemoveQueryString(string URL)
+        {
+            int startQueryString = URL.IndexOf("?");
+
+            if (startQueryString != -1)
+                URL = URL.Substring(0, startQueryString);
+
+            return URL;
         }
     }
 

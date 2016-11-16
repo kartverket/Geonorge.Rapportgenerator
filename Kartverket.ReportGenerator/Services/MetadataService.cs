@@ -12,13 +12,44 @@ namespace Kartverket.ReportGenerator.Services
 {
     public class MetadataService
     {
-        public Metadata getMetadata(string uuid)
+        public Metadata GetMetadata(string uuid)
         {
             var client = new System.Net.WebClient { UseDefaultCredentials = true };
             client.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             var result = JsonConvert.DeserializeObject<Metadata>(Encoding.UTF8.GetString(client.DownloadData(ConfigurationManager.AppSettings["KartkatalogenUrl"] + "api/getdata/" + uuid)));
 
             return result;
+        }
+
+        public string GetWfsDistributionUrl(Related[] Related)
+        {
+            for (int r = 0; r < Related.Length; r++)
+            {
+                var distributionDetails= Related[r].DistributionDetails;
+                if(distributionDetails != null && distributionDetails.Protocol == "OGC:WFS")
+                {
+                    return distributionDetails.URL;
+                }
+            }
+
+            return null;
+        }
+
+        public string GetListStoredQueriesUrl(string url)
+        {
+            url = RemoveQueryString(url);
+            url = url + "?service=WFS&version=2.0.0&&request=ListStoredQueries";
+            return url;
+        }
+
+        string RemoveQueryString(string URL)
+        {
+            int startQueryString = URL.IndexOf("?");
+
+            if (startQueryString != -1)
+                URL = URL.Substring(0, startQueryString);
+
+            return URL;
         }
     }
 

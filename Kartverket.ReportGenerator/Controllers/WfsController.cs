@@ -12,7 +12,7 @@ namespace Kartverket.ReportGenerator.Controllers
         // GET: Wfs
         public ActionResult Index()
         {
-            ViewBag.StoredQueries = new Wfs().GetStoredQueries();
+            ViewBag.StoredQueries = new Wfs().GetStoredQueries("http://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=ListStoredQueries");
             return View();
         }
     }

@@ -8,11 +8,11 @@ using System.Web.Configuration;
 namespace Kartverket.ReportGenerator.Models
 {
 
-    public static class QueryConfig
+    public class QueryConfig
     {
-        static List<Query> queries;
+        List<Query> queries;
 
-        static QueryConfig()
+        public QueryConfig()
         {
             queries = new List<Query>();
 
@@ -47,31 +47,36 @@ namespace Kartverket.ReportGenerator.Models
             );
 
 
-            Data Tilgjengelighet_tettsted = new Data
-            {
-                Value = "9c075b5d-1fb5-414e-aaf5-c6390db896d1",
-                Name =  "Tilgjengelighet - tettsted",
-                QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getAntallHCPlasserPrAdmEnhet&admEnhNr=16"
-            };
+            //Data Tilgjengelighet_tettsted = new Data
+            //{
+            //    Value = "9c075b5d-1fb5-414e-aaf5-c6390db896d1",
+            //    Name =  "Tilgjengelighet - tettsted",
+            //    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getAntallHCPlasserPrAdmEnhet&admEnhNr=16"
+            //};
 
-            queries.Add(
-                new Query
-                {
-                    Data = Tilgjengelighet_tettsted,
-                    Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
-                    Name = "HC-parkeringsplasser tilgjengelighet el. rullestol",
-                    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03"
-                }
-            );
+            //queries.Add(
+            //    new Query
+            //    {
+            //        Data = Tilgjengelighet_tettsted,
+            //        Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
+            //        Name = "HC-parkeringsplasser tilgjengelighet el. rullestol",
+            //        QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03"
+            //    }
+            //);
 
         }
 
-        public static List<Query> GetQueries()
+        public void AddQuery(Query query)
+        {
+            queries.Add(query);
+        }
+
+        public List<Query> GetQueries()
         {
             return queries.ToList();
         }
 
-        public static Query GetQuery(string value)
+        public Query GetQuery(string value)
         {
             return queries.Where(q => q.Value == value).FirstOrDefault();
         }
