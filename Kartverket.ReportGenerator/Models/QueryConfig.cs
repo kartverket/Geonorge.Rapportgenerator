@@ -16,6 +16,8 @@ namespace Kartverket.ReportGenerator.Models
         {
             queries = new List<Query>();
 
+            //Fixed queries for DOK data from registry
+
             Data DOK = new Data { Value = "e4eb3a1d-481e-45a2-8a58-ead15240a9b0", Name = "Det offentlige kartgrunnlaget" };
 
             queries.Add(
@@ -45,24 +47,6 @@ namespace Kartverket.ReportGenerator.Models
                     QueryUrl = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/report"
                 }
             );
-
-
-            //Data Tilgjengelighet_tettsted = new Data
-            //{
-            //    Value = "9c075b5d-1fb5-414e-aaf5-c6390db896d1",
-            //    Name =  "Tilgjengelighet - tettsted",
-            //    QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getAntallHCPlasserPrAdmEnhet&admEnhNr=16"
-            //};
-
-            //queries.Add(
-            //    new Query
-            //    {
-            //        Data = Tilgjengelighet_tettsted,
-            //        Value = "HCPlasserPrAdmEnhetElRullestolTilgjengelig",
-            //        Name = "HC-parkeringsplasser tilgjengelighet el. rullestol",
-            //        QueryUrl = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=urn:ogc:def:storedQuery:OGC-WFS::getHCPlasserPrAdmEnhetElRullestol&admEnhNr=03"
-            //    }
-            //);
 
         }
 

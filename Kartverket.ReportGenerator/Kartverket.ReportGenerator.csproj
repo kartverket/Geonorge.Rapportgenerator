@@ -203,6 +203,10 @@
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.Designer.cs">
       <DependentUpon>201608231237117_DataTypeRenameConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611161155279_ReconfigQueryModel.cs" />
+    <Compile Include="Migrations\201611161155279_ReconfigQueryModel.Designer.cs">
+      <DependentUpon>201611161155279_ReconfigQueryModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\QueryConfig.cs" />
     <Compile Include="Models\Wfs.cs" />
     <Compile Include="Services\ExcelReportGenerator.cs" />
@@ -218,10 +222,8 @@
       <DependentUpon>201608101113414_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\ConfigMetadataEntry.cs" />
-    <Compile Include="Models\ConfigQueryParameter.cs" />
+    <Compile Include="Models\MetadataEntry.cs" />
     <Compile Include="Models\ReportDbContext.cs" />
-    <Compile Include="Models\ConfigReportQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MetadataService.cs" />
     <Compile Include="Services\RegisterService.cs" />
@@ -416,6 +418,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608231237117_DataTypeRenameConfig.resx">
       <DependentUpon>201608231237117_DataTypeRenameConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611161155279_ReconfigQueryModel.resx">
+      <DependentUpon>201611161155279_ReconfigQueryModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
