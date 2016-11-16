@@ -28,21 +28,26 @@ namespace Kartverket.ReportGenerator.Services
         {
             QueryConfig config = new QueryConfig();
             var metadataService = new MetadataService();
-            var metadata = metadataService.GetMetadata("9c075b5d-1fb5-414e-aaf5-c6390db896d1"); // todo get from db
-            var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related);
-            var SqUrl = metadataService.GetListStoredQueriesUrl(wfsUrl);
-            var queries = new Wfs().GetStoredQueries(SqUrl);
-            foreach (var query in queries)
-            {
-                config.AddQuery(new Query
+            var metadataList = _dbContext.MetadataEntries.ToList();
+            foreach(var entry in metadataList)
+            { 
+                var metadata = metadataService.GetMetadata(entry.Uuid);
+                var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related);
+                var SqUrl = metadataService.GetListStoredQueriesUrl(wfsUrl);
+                var queries = new Wfs().GetStoredQueries(SqUrl);
+                foreach (var query in queries)
                 {
-                    Data = new Data { Value = metadata.Uuid, Name = metadata.Title, QueryUrl = query.QueryUrlTotal }
-                    ,
-                    Name = query.Title,
-                    Value = query.Title.Replace(' ', '_'),
-                    QueryUrl = query.QueryUrl
+                    config.AddQuery(new Query
+                    {
+                        Data = new Data { Value = metadata.Uuid, Name = metadata.Title, QueryUrl = query.QueryUrlTotal }
+                        ,
+                        Name = query.Title,
+                        Value = query.Title.Replace(' ', '_'),
+                        QueryUrl = query.QueryUrl
+                    }
+                    );
                 }
-                );
+
             }
 
             return config;
