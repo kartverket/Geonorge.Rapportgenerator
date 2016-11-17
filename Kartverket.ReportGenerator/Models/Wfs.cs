@@ -41,24 +41,36 @@ namespace Kartverket.ReportGenerator.Models
         List<QueryData> ParseStoredQueries(ListStoredQueriesResponse list)
         {
             List<QueryData> qList = new List<QueryData>();
-            string type, typePrev = "", queryUrlTotal = "";
-            //First 2 stored queries are default: GetFeatureById and GetFeatureByType
-            for (int q = 2; q < list.StoredQuery.Length; q++)
+
+            var totalTypes = list.StoredQuery.Where(x => x.id.Contains("_Total"));
+
+            foreach(var type in totalTypes)
             {
-                QueryData qData = new QueryData();
-                qData.Title = list.StoredQuery[q].Title;
-                qData.QueryUrl = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
-                type = list.StoredQuery[q].ReturnFeatureType[0].ToString();
-                if(type != typePrev && list.StoredQuery[q].id.Contains("getAntall"))
-                    queryUrlTotal = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + list.StoredQuery[q].id + "&admEnhNr=03";
+                var storedQueryName = type.id;
+                var objectType = GetSubstringByString("::", "_", storedQueryName);
+                var queryUrlTotal = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + storedQueryName + "&admEnhNr=03";
 
-                qData.QueryUrlTotal = queryUrlTotal;
-                if(!list.StoredQuery[q].id.Contains("getAntall"))
+                var storedQueries = list.StoredQuery.Where(y => y.id.Contains("::" + objectType + "_") && !y.id.Contains("_Total"));
+
+                foreach(var query in storedQueries)
+                {
+                    QueryData qData = new QueryData();
+                    storedQueryName = query.id;
+                    qData.Title = query.Title;
+                    qData.QueryUrlTotal = queryUrlTotal;
+                    qData.QueryUrl = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + storedQueryName + "&admEnhNr=03";
+
                     qList.Add(qData);
-
-                typePrev = type;
+                }
             }
+
+
             return qList;
+        }
+
+        public string GetSubstringByString(string a, string b, string c)
+        {
+            return c.Substring((c.IndexOf(a) + a.Length), (c.IndexOf(b) - c.IndexOf(a) - a.Length));
         }
 
         string RemoveQueryString(string URL)
