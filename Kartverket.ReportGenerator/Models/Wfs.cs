@@ -42,7 +42,7 @@ namespace Kartverket.ReportGenerator.Models
         {
             List<QueryData> qList = new List<QueryData>();
 
-            var totalTypes = list.StoredQuery.Where(x => x.id.Contains("_Total"));
+            var totalTypes = list.StoredQuery.Where(x => x.id.EndsWith("_Totalt"));
 
             foreach(var type in totalTypes)
             {
@@ -50,7 +50,7 @@ namespace Kartverket.ReportGenerator.Models
                 var objectType = GetSubstringByString("::", "_", storedQueryName);
                 var queryUrlTotal = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + storedQueryName + "&admEnhNr=03";
 
-                var storedQueries = list.StoredQuery.Where(y => y.id.Contains("::" + objectType + "_") && !y.id.Contains("_Total"));
+                var storedQueries = list.StoredQuery.Where(y => y.id.Contains("::" + objectType + "_") && !y.id.EndsWith("_Totalt"));
 
                 foreach(var query in storedQueries)
                 {
