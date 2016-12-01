@@ -61,14 +61,22 @@
     var $dataSelect = $('#data');
     $dataSelect.find('option').remove();
     $dataSelect.append('<option></option>');
+    var prevGroup, $group = $();
     $.each(JSON.parse(model), function (i, v) {
+        group = v.Data.ObjectType.Name;
+        console.log(group);
+        if (group != prevGroup) {
+            $group = $('<optgroup />', { label: group }).appendTo('#data');
+        }
         if (!$("#data option[value='" + v.Data.Value + "']").length > 0)
         {
-            $dataSelect.append($('<option />', {
+            $group.append($('<option />', {
                 text: v.Data.Name,
                 value: v.Data.Value
             }));
         }
+
+        prevGroup = group;
     });
 
     if (selectedData != "")

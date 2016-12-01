@@ -18,7 +18,9 @@ namespace Kartverket.ReportGenerator.Models
 
             //Fixed queries for DOK data from registry
 
-            Data DOK = new Data { Value = "e4eb3a1d-481e-45a2-8a58-ead15240a9b0", Name = "Det offentlige kartgrunnlaget" };
+            ObjectType datapackage = new ObjectType { Name = "Datapakker", Value = "datapackage" };
+
+            Data DOK = new Data { ObjectType = datapackage, Value = "e4eb3a1d-481e-45a2-8a58-ead15240a9b0", Name = "Det offentlige kartgrunnlaget" };
 
             queries.Add(
                 new Query
@@ -72,6 +74,7 @@ namespace Kartverket.ReportGenerator.Models
         public string Value { get; set; }
         public string Name { get; set; }
         public string QueryUrl { get; set; }
+        public ObjectType ObjectType { get; set; }
     }
 
     public class Query
@@ -81,5 +84,11 @@ namespace Kartverket.ReportGenerator.Models
         public string QueryUrl { get; set; }
         public Data Data { get; set; }
 
+    }
+
+    public class ObjectType
+    {
+        public string Value { get; set; }
+        public string Name { get; set; }
     }
 }

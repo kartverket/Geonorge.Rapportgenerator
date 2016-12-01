@@ -56,6 +56,7 @@ namespace Kartverket.ReportGenerator.Models
                 {
                     QueryData qData = new QueryData();
                     storedQueryName = query.id;
+                    qData.ObjectType = objectType;
                     qData.Title = query.Title;
                     qData.QueryUrlTotal = queryUrlTotal;
                     qData.QueryUrl = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + storedQueryName + "&admEnhNr=03";
@@ -89,6 +90,7 @@ namespace Kartverket.ReportGenerator.Models
         public string Title { get; set; }
         public string QueryUrl { get; set; }
         public string QueryUrlTotal { get; set; }
+        public string ObjectType { get; set; }
     }
 
 

@@ -39,7 +39,11 @@ namespace Kartverket.ReportGenerator.Services
                 {
                     config.AddQuery(new Query
                     {
-                        Data = new Data { Value = metadata.Uuid, Name = metadata.Title, QueryUrl = query.QueryUrlTotal }
+                        Data = new Data { ObjectType = new ObjectType
+                        { Value = metadata.Uuid, Name = metadata.Title },
+                            Name = query.ObjectType,
+                            Value = query.ObjectType
+                          , QueryUrl = query.QueryUrlTotal }
                         ,
                         Name = query.Title,
                         Value = query.Title.Replace(' ', '_'),
