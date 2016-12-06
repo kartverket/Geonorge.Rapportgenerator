@@ -44,7 +44,7 @@ namespace Kartverket.ReportGenerator.Controllers
             ViewBag.kommuner = _registerService.GetKommuner();
             ViewBag.selectedAreas = areas;
             ViewBag.data = data;
-            var queryConfig = queries.GetQuery(query);
+            var queryConfig = queries.GetQuery(query, data);
             ViewBag.query = queryConfig;
             ReportQuery reportQuery = new ReportQuery();
             reportQuery.Parameters = new List<ReportQueryParameter>();

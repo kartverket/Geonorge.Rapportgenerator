@@ -62,9 +62,9 @@ namespace Kartverket.ReportGenerator.Models
             return queries.ToList();
         }
 
-        public Query GetQuery(string value)
+        public Query GetQuery(string value, string data)
         {
-            return queries.Where(q => q.Value == value).FirstOrDefault();
+            return queries.Where(q => q.Value == value && (q.Data.Name == data || q.Data.Value == data) ).FirstOrDefault();
         }
     }
 
