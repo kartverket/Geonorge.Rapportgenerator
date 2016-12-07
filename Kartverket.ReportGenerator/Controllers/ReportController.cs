@@ -18,6 +18,7 @@ namespace Kartverket.ReportGenerator.Controllers
         private readonly IReportService _reportService;
         private readonly IRegisterService _registerService;
 
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public ReportController(IReportService reportService, IRegisterService registerService)
         {
@@ -28,44 +29,62 @@ namespace Kartverket.ReportGenerator.Controllers
         
         public ActionResult Index()
         {
-            QueryConfig queries = _reportService.GetQueries();
-            ViewBag.Queries = queries.GetQueries();
-            ViewBag.fylker = _registerService.GetFylker();
-            ViewBag.kommuner = _registerService.GetKommuner();
-            ViewBag.selectedAreas = new string[]{};
+            try
+            { 
+                QueryConfig queries = _reportService.GetQueries();
+                ViewBag.Queries = queries.GetQueries();
+                ViewBag.fylker = _registerService.GetFylker();
+                ViewBag.kommuner = _registerService.GetKommuner();
+                ViewBag.selectedAreas = new string[]{};
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return View("Error");
+            }
+
             return View();
         }
 
         public ActionResult Details(string[] areas, string data, string query, string action)
         {
-            QueryConfig queries = _reportService.GetQueries();
-            ViewBag.Queries = queries.GetQueries();
-            ViewBag.fylker = _registerService.GetFylker();
-            ViewBag.kommuner = _registerService.GetKommuner();
-            ViewBag.selectedAreas = areas;
-            ViewBag.data = data;
-            var queryConfig = queries.GetQuery(query, data);
-            ViewBag.query = queryConfig;
-            ReportQuery reportQuery = new ReportQuery();
-            reportQuery.Parameters = new List<ReportQueryParameter>();
-            reportQuery.QueryName = queryConfig.Value;
-            foreach (string area in areas)
+            try
             {
-                reportQuery.Parameters.Add(new ReportQueryParameter { Name = "area", Value = area });
-            }
-            reportQuery.Parameters.Add(new ReportQueryParameter { Name = "data", Value = data });
-            ReportResult result = _reportService.GetQueryResult(reportQuery);
+                QueryConfig queries = _reportService.GetQueries();
+                ViewBag.Queries = queries.GetQueries();
+                ViewBag.fylker = _registerService.GetFylker();
+                ViewBag.kommuner = _registerService.GetKommuner();
+                ViewBag.selectedAreas = areas;
+                ViewBag.data = data;
+                var queryConfig = queries.GetQuery(query, data);
+                ViewBag.query = queryConfig;
+                ReportQuery reportQuery = new ReportQuery();
+                reportQuery.Parameters = new List<ReportQueryParameter>();
+                reportQuery.QueryName = queryConfig.Value;
+                foreach (string area in areas)
+                {
+                    reportQuery.Parameters.Add(new ReportQueryParameter { Name = "area", Value = area });
+                }
+                reportQuery.Parameters.Add(new ReportQueryParameter { Name = "data", Value = data });
+                ReportResult result = _reportService.GetQueryResult(reportQuery);
 
-            if (action == "Excel")
+                if (action == "Excel")
+                {
+                    var fileStream = new ExcelReportGenerator().CreateExcelSheet(reportQuery, result);
+
+                    var fileStreamResult = new FileStreamResult(fileStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    fileStreamResult.FileDownloadName = "Rapport-" + query + ".xlsx";
+                    return fileStreamResult;
+                }
+                else
+                    return View(result);
+            }
+
+            catch (Exception ex)
             {
-                var fileStream = new ExcelReportGenerator().CreateExcelSheet(reportQuery, result);
-
-                var fileStreamResult = new FileStreamResult(fileStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                fileStreamResult.FileDownloadName = "Rapport-" + query + ".xlsx";
-                return fileStreamResult;
+                Log.Error(ex);
+                return View("Error");
             }
-            else
-                return View(result);
         }
 
     }

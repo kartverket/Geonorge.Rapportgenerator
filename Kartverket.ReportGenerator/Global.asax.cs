@@ -20,6 +20,7 @@ namespace Kartverket.ReportGenerator
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             DependencyConfig.Configure(new ContainerBuilder());
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }
