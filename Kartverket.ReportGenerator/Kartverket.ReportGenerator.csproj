@@ -198,7 +198,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\WfsController.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.Designer.cs">
       <DependentUpon>201608231237117_DataTypeRenameConfig.cs</DependentUpon>
@@ -410,7 +409,6 @@
     <Content Include="Web.Test.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Wfs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201608101113414_Initial.resx">
