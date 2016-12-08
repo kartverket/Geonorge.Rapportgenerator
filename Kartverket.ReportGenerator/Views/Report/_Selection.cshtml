@@ -80,13 +80,13 @@
     });
 
     if (selectedData != "")
-        $("#data").val(selectedData).find("option[value=" + selectedData + "]").attr('selected', true);
+        $("#data").val(selectedData).find("option[text='" + selectedData + "']").attr('selected', true);
     @if (!string.IsNullOrEmpty(ViewBag.data))
     {
         @: getQueries();
     }
     if (selectedQuery != "")
-        $("#query").val(selectedQuery).find("option[value=" + selectedQuery + "]").attr('selected', true);
+        $("#query").val(selectedQuery).find("option[value='" + selectedQuery + "']").attr('selected', true);
 
     $dataSelect.trigger("chosen:updated");
 
