@@ -56,7 +56,7 @@ namespace Kartverket.ReportGenerator.Models
                 {
                     QueryData qData = new QueryData();
                     storedQueryName = query.id;
-                    qData.ObjectType = objectType;
+                    qData.ObjectType = FormatObjectType(objectType);
                     qData.Title = query.Title;
                     qData.QueryUrlTotal = queryUrlTotal;
                     qData.QueryUrl = RemoveQueryString(url) + "?service=WFS&version=2.0.0&request=GetFeature&resultType=hits&STOREDQUERY_ID=" + storedQueryName + "&admEnhNr=03";
@@ -67,6 +67,39 @@ namespace Kartverket.ReportGenerator.Models
 
 
             return qList;
+        }
+
+        string FormatObjectType(string theString)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int s=0; s < theString.Length; s++)
+            {
+                char c = theString[s];
+                if (Char.IsUpper(c) && builder.Length > 0)
+                {
+                    if(s + 1 < theString.Length)
+                    { 
+                        if (Char.IsUpper(theString[s + 1]))
+                        {
+                            builder.Append(' ');
+                            builder.Append(theString[s]);
+                            builder.Append(theString[s + 1]);
+                            builder.Append('-');
+                            s++;
+                        }
+                        else
+                        {
+                            builder.Append(' ');
+                            builder.Append(Char.ToLower(theString[s]));
+                        }
+                    }
+                }
+                else { 
+                builder.Append(s == 0 ? c : Char.ToLower(c));
+                }
+            }
+            return builder.ToString();
+
         }
 
         public string GetSubstringByString(string a, string b, string c)
