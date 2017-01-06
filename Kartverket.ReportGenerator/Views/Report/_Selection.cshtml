@@ -56,8 +56,8 @@
 
 <script>
     var model = '@Html.Raw(Json.Encode(ViewBag.Queries))';
-    var selectedData = '@ViewBag.data';
-    var selectedQuery = '@(ViewBag.query != null ? ViewBag.query.Value : "")';
+    var selectedData = '@Html.Raw(ViewBag.data)';
+    var selectedQuery = '@(ViewBag.query != null ? Html.Raw(ViewBag.query.Value) : "")';
     var $dataSelect = $('#data');
     $dataSelect.find('option').remove();
     $dataSelect.append('<option></option>');
