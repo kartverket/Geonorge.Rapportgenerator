@@ -210,6 +210,10 @@
     <Compile Include="Migrations\201611161155279_ReconfigQueryModel.Designer.cs">
       <DependentUpon>201611161155279_ReconfigQueryModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701121117207_AddMetadataSortOrder.cs" />
+    <Compile Include="Migrations\201701121117207_AddMetadataSortOrder.Designer.cs">
+      <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\QueryConfig.cs" />
     <Compile Include="Models\Wfs.cs" />
     <Compile Include="Services\ExcelReportGenerator.cs" />
@@ -423,6 +427,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611161155279_ReconfigQueryModel.resx">
       <DependentUpon>201611161155279_ReconfigQueryModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701121117207_AddMetadataSortOrder.resx">
+      <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

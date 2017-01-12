@@ -28,7 +28,7 @@ namespace Kartverket.ReportGenerator.Services
         {
             QueryConfig config = new QueryConfig();
             var metadataService = new MetadataService();
-            var metadataList = _dbContext.MetadataEntries.ToList();
+            var metadataList = _dbContext.MetadataEntries.OrderBy(m => m.SortOrder).ToList();
             foreach(var entry in metadataList)
             { 
                 var metadata = metadataService.GetMetadata(entry.Uuid);

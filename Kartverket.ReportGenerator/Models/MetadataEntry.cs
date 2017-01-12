@@ -10,5 +10,6 @@ namespace Kartverket.ReportGenerator.Models
     {
         [Key]
         public string Uuid { get; set; }
+        public int SortOrder { get; set; }
     }
 }
