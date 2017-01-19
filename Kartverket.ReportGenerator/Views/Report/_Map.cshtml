@@ -200,12 +200,14 @@
     var counterInterVal = 0;
 
     function setMarker() {
-
-        if(counterInterVal <= 10) {
-            counterInterVal++;
-            AddMarker();
-        } else {
-            clearInterval(myTimer);
+        if(positionFound)
+        {
+            if(counterInterVal <= 10) {
+                counterInterVal++;
+                AddMarker();
+            } else {
+                clearInterval(myTimer);
+            }
         }
     }
     var myTimer = setInterval(setMarker, 1000);
@@ -222,22 +224,33 @@
         });
     }
 
+    var positionFound = false;
+
     function setWfs(xml) {
         console.log(xml);
 
         $(xml).find("wfs\\:member, member").each(function () {
             var pos = $(this).find("gml\\:pos, pos").text();
 
-            console.log(pos);
+            if(pos != "")
+            {
+                console.log("Pos:" + pos);
 
-            var coords = pos.split(' ');
+                var coords = pos.split(' ');
 
-            x = Math.floor(coords[0]);
-            y = Math.floor(coords[1]);
+                x = Math.floor(coords[0]);
+                y = Math.floor(coords[1]);
 
-            wfsList.push({ x: x, y: y, title: '@Html.Raw(ViewBag.query.Name)' });
+                wfsList.push({ x: x, y: y, title: '@Html.Raw(ViewBag.query.Name)' });
 
+                positionFound = true;
+            }
         });
+
+        if(!positionFound){
+            iframe.style.visibility = "hidden";
+            iframe.style.display = "none";
+        }
     }
 
 
