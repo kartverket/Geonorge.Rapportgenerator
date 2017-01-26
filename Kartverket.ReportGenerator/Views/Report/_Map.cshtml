@@ -219,7 +219,7 @@
                 "Content-Type": "text/plain; charset=utf-8"
             },
             type: "GET",
-            url: "@Html.Raw(queryUrl)",
+            url: "@Html.Raw(queryUrl.Replace("å", "%C3%A5").Replace("Å", "%C3%85").Replace("æ", "%C3%A6").Replace("Æ", "%C3%86").Replace("ø", "%C3%B8").Replace("Ø", "%C3%98"))",
             success: setWfs
         });
     }
@@ -271,8 +271,6 @@
             iframe.style.display = "none";
         }
     }
-
-
 
 </script>
 
