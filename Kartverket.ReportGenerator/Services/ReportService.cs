@@ -33,23 +33,27 @@ namespace Kartverket.ReportGenerator.Services
             { 
                 var metadata = metadataService.GetMetadata(entry.Uuid);
                 var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related);
-                var SqUrl = metadataService.GetListStoredQueriesUrl(wfsUrl);
-                var queries = new Wfs().GetStoredQueries(SqUrl);
-                foreach (var query in queries)
-                {
-                    config.AddQuery(new Query
+
+                if (!string.IsNullOrEmpty(wfsUrl))
+                { 
+                    var SqUrl = metadataService.GetListStoredQueriesUrl(wfsUrl);
+                    var queries = new Wfs().GetStoredQueries(SqUrl);
+                    foreach (var query in queries)
                     {
-                        Data = new Data { ObjectType = new ObjectType
-                        { Value = metadata.Uuid, Name = metadata.Title },
-                            Name = query.ObjectType,
-                            Value = query.ObjectType
-                          , QueryUrl = query.QueryUrlTotal }
-                        ,
-                        Name = query.Title,
-                        Value = query.Title.Replace(' ', '_'),
-                        QueryUrl = query.QueryUrl
+                        config.AddQuery(new Query
+                        {
+                            Data = new Data { ObjectType = new ObjectType
+                            { Value = metadata.Uuid, Name = metadata.Title },
+                                Name = query.ObjectType,
+                                Value = query.ObjectType
+                              , QueryUrl = query.QueryUrlTotal }
+                            ,
+                            Name = query.Title,
+                            Value = query.Title.Replace(' ', '_'),
+                            QueryUrl = query.QueryUrl
+                        }
+                        );
                     }
-                    );
                 }
 
             }

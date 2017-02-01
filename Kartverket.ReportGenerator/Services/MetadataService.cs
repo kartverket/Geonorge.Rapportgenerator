@@ -23,12 +23,15 @@ namespace Kartverket.ReportGenerator.Services
 
         public string GetWfsDistributionUrl(Related[] Related)
         {
-            for (int r = 0; r < Related.Length; r++)
-            {
-                var distributionDetails= Related[r].DistributionDetails;
-                if(distributionDetails != null && distributionDetails.Protocol == "OGC:WFS")
+            if(Related != null)
+            { 
+                for (int r = 0; r < Related.Length; r++)
                 {
-                    return distributionDetails.URL;
+                    var distributionDetails= Related[r].DistributionDetails;
+                    if(distributionDetails != null && distributionDetails.Protocol == "OGC:WFS")
+                    {
+                        return distributionDetails.URL;
+                    }
                 }
             }
 
