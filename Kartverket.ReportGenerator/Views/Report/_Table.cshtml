@@ -35,8 +35,14 @@
         <div class="col-md-1">
             Totalt
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             % av totalt
+        </div>
+        <div class="col-md-1">
+        @if (ViewBag.query.Value == "register-DOK-selectedAndAdditional")
+        {
+        <span>Bekreftet</span>
+        }
         </div>
     </div>
     <div class="menu-separator search-results-table-heading"></div>
@@ -64,10 +70,16 @@
                 @data.TotalDataCount 
             }
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             @if(data.TotalDataCount > 0)
             {
             @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100))
+            }
+        </div>
+        <div class="col-md-1">
+            @if(data.Values.Count > 2 && data.Values[2].Key == "Bekreftet")
+            {
+            @data.Values[2].Value
             }
         </div>
     </div>

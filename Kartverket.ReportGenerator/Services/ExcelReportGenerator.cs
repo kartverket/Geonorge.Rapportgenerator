@@ -53,6 +53,8 @@ namespace Kartverket.ReportGenerator.Services
                     AddContent(Convert.ToInt16(data.TotalDataCount), "0");
                 if(data.TotalDataCount > 0)
                     AddContent((Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100)), "0");
+                if (data.Values.Count > 2 && data.Values[2].Key == "Bekreftet")
+                    AddContent(data.Values[2].Value);
 
             }
         }
@@ -73,6 +75,8 @@ namespace Kartverket.ReportGenerator.Services
 
             AddContent("Totalt");
             AddContent("% av totalt");
+            if(reportQuery.QueryName == "register-DOK-selectedAndAdditional")
+                AddContent("Bekreftet");
         }
 
 
