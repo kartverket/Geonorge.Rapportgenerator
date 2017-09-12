@@ -168,7 +168,7 @@
     @:$.ajax({
             @:    dataType: "json",
             @:  async: false,
-            @:   url: '@WebConfigurationManager.AppSettings["MapUrl"]/ws/trans.py?ost=' + xCenter + '&nord=' + yCenter + '&sosiKoordSys=84&resSosiKoordSys=23',
+            @:   url: '@WebConfigurationManager.AppSettings["GeonorgeWebserviceUrl"]/transApi?ost=' + xCenter + '&nord=' + yCenter + '&fra=84&til=23',
             @:   success: function(result) {
                 @:       xCenter = Math.floor(result.ost);
                 @: yCenter = Math.floor(result.nord);
