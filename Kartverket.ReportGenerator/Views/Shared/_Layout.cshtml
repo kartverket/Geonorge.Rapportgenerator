@@ -30,8 +30,8 @@
 
         var cultureData = {
             supportsMultiCulture: @(Html.SupportsMultiCulture() ? "true" : "false"),
-            urlSetCulture: '@VirtualPathUtility.ToAbsolute("~/Report/SetCulture?culture=")@Kartverket.ReportGenerator.Models.Translations.Culture.EnglishCode&ReturnUrl=@Request.Url',
-            urlSetCultureNorwegian: '@VirtualPathUtility.ToAbsolute("~/Report/SetCulture?culture=")@Kartverket.ReportGenerator.Models.Translations.Culture.NorwegianCode&ReturnUrl=@Request.Url',
+            urlSetCulture: '@Url.Action("SetCulture", "Report", new { culture = Kartverket.ReportGenerator.Models.Translations.Culture.EnglishCode, ReturnUrl = Request.Url })',
+            urlSetCultureNorwegian: '@Url.Action("SetCulture", "Report", new { culture = Kartverket.ReportGenerator.Models.Translations.Culture.NorwegianCode, ReturnUrl = Request.Url })',
             currentCulture: '@CultureHelper.GetCurrentCulture()'
         };
     </script>
