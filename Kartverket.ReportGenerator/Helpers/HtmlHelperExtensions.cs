@@ -55,5 +55,10 @@ namespace Kartverket.ReportGenerator.Helpers
         {
             return WebConfigurationManager.AppSettings["KartkatalogenUrl"];
         }
+
+        public static bool SupportsMultiCulture(this HtmlHelper helper)
+        {
+            return Boolean.Parse(WebConfigurationManager.AppSettings["SupportsMultiCulture"]); ;
+        }
     }
 }

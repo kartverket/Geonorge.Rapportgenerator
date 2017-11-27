@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,10 +67,6 @@
     </Reference>
     <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Kartverket.ReportApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kartverket.ReportApi.5.6.82\lib\net452\Kartverket.ReportApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Kentor.AuthServices, Version=0.17.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -202,6 +199,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.Designer.cs">
       <DependentUpon>201608231237117_DataTypeRenameConfig.cs</DependentUpon>
@@ -215,7 +213,18 @@
       <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\QueryConfig.cs" />
+    <Compile Include="Models\Translations\Culture.cs" />
     <Compile Include="Models\Wfs.cs" />
+    <Compile Include="Resources\UI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UI.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UI.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UI.en.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\ExcelReportGenerator.cs" />
     <Compile Include="Services\IRegisterService.cs" />
     <Compile Include="Services\IReportService.cs" />
@@ -487,11 +496,25 @@
     <EmbeddedResource Include="Migrations\201701121117207_AddMetadataSortOrder.resx">
       <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UI.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UI.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UI.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UI.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kartverket.ReportApi\Kartverket.ReportApi.csproj">
+      <Project>{a5b650b8-98dc-4671-8856-b87440a1892a}</Project>
+      <Name>Kartverket.ReportApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
