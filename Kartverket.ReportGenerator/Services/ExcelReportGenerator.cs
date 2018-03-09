@@ -13,9 +13,11 @@ namespace Kartverket.ReportGenerator.Services
         private ExcelWorksheet ws;
         private int RowIndex = 1;
         private int ColumnIndex = 1;
+        Dictionary<string, string> _codeList;
 
-        public Stream CreateExcelSheet(ReportQuery reportQuery,ReportResult result)
+        public Stream CreateExcelSheet(ReportQuery reportQuery,ReportResult result, Dictionary<string,string> codeList)
         {
+            _codeList = codeList;
             RowIndex = 1;
             ColumnIndex = 1;
 
@@ -38,6 +40,7 @@ namespace Kartverket.ReportGenerator.Services
             {
                 NewRow();
                 AddContent(data.Label);
+                AddContent(GetLabelNumber(data));
                 AddContent(data.Values[0].Key);
                 AddContent(reportQuery.QueryName);
                 if(!string.IsNullOrEmpty(data.Values[0].Value) && IsNumeric(data.Values[0].Value))
@@ -59,9 +62,29 @@ namespace Kartverket.ReportGenerator.Services
             }
         }
 
+        private string GetLabelNumber(ReportResultData data)
+        {
+            string label = "";
+
+            if (data.Values.Count > 2 && data.Values[2].Key == "Number")
+                return data.Values[2].Value;
+
+            if (data.Values.Count > 3 && data.Values[3].Key == "Number")
+                return data.Values[3].Value;
+
+            label = data.Label;
+            label = label.Replace(" kommune", "");
+
+            if (_codeList.ContainsValue(label))
+                return _codeList.Where(d => d.Value == label).Select(s=> s.Key).FirstOrDefault();
+
+            return label;
+        }
+
         private void AddHeadlinesToSheet(ReportQuery reportQuery)
         {
             AddContent("Område");
+            AddContent("Nummer");
             AddContent("Data");
             AddContent("Spørring");
             if (reportQuery.QueryName == "DOK-datasett dekning og valgt pr kommune")

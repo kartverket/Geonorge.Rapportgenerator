@@ -76,8 +76,12 @@ namespace Kartverket.ReportGenerator.Controllers
             {
                 QueryConfig queries = _reportService.GetQueries();
                 ViewBag.Queries = queries.GetQueries();
-                ViewBag.fylker = _registerService.GetFylker();
-                ViewBag.kommuner = _registerService.GetKommuner();
+                var fylker = _registerService.GetFylker();
+                var kommuner = _registerService.GetKommuner();
+                ViewBag.fylker = fylker;
+                ViewBag.kommuner = kommuner;
+                Dictionary<string, string> codeList = new Dictionary<string, string>();
+                codeList = fylker.Union(kommuner).ToDictionary(k => k.Key, v => v.Value);
                 ViewBag.selectedAreas = areas;
                 ViewBag.data = data;
                 var queryConfig = queries.GetQuery(query, data);
@@ -94,7 +98,7 @@ namespace Kartverket.ReportGenerator.Controllers
 
                 if (action == "Excel")
                 {
-                    var fileStream = new ExcelReportGenerator().CreateExcelSheet(reportQuery, result);
+                    var fileStream = new ExcelReportGenerator().CreateExcelSheet(reportQuery, result, codeList);
 
                     var fileStreamResult = new FileStreamResult(fileStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                     fileStreamResult.FileDownloadName = "Rapport-" + query + ".xlsx";

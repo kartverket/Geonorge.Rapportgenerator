@@ -32,7 +32,7 @@ namespace Kartverket.ReportGenerator.Services
             foreach(var entry in metadataList)
             { 
                 var metadata = metadataService.GetMetadata(entry.Uuid);
-                var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related);
+                var wfsUrl = metadataService.GetWfsDistributionUrl(metadata.Related, entry.Uuid);
 
                 if (!string.IsNullOrEmpty(wfsUrl))
                 { 
