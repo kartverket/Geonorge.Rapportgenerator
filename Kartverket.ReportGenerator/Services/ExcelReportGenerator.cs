@@ -87,11 +87,11 @@ namespace Kartverket.ReportGenerator.Services
             AddContent("Nummer");
             AddContent("Data");
             AddContent("Spørring");
-            if (reportQuery.QueryName == "DOK-datasett dekning og valgt pr kommune")
+            if (reportQuery.QueryName == "register-DOK-coverage")
                 AddContent("Dekning");
             else
                 AddContent("Antall");
-            if (reportQuery.QueryName == "DOK-datasett dekning og valgt pr kommune")
+            if (reportQuery.QueryName == "register-DOK-coverage")
                 AddContent("Valgt");
             else
                 AddContent("Tillegg");
