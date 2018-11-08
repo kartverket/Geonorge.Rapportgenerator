@@ -13,5 +13,6 @@ namespace Kartverket.ReportGenerator.Models
         }
 
         public virtual DbSet<MetadataEntry> MetadataEntries { get; set; }
+        public virtual DbSet<Kartverket.ReportGenerator.Models.statistics.Data> StatisticalData { get; set; }
     }
 }

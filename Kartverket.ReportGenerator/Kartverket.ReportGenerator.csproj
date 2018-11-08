@@ -199,6 +199,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.cs" />
     <Compile Include="Migrations\201608231237117_DataTypeRenameConfig.Designer.cs">
@@ -212,7 +213,12 @@
     <Compile Include="Migrations\201701121117207_AddMetadataSortOrder.Designer.cs">
       <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811081250582_AddStatisticalData.cs" />
+    <Compile Include="Migrations\201811081250582_AddStatisticalData.Designer.cs">
+      <DependentUpon>201811081250582_AddStatisticalData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\QueryConfig.cs" />
+    <Compile Include="Models\statistics\Data.cs" />
     <Compile Include="Models\Translations\Culture.cs" />
     <Compile Include="Models\Wfs.cs" />
     <Compile Include="Resources\UI.Designer.cs">
@@ -501,6 +507,7 @@
     <Content Include="Web.Test.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Views\Statistics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201608101113414_Initial.resx">
@@ -514,6 +521,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701121117207_AddMetadataSortOrder.resx">
       <DependentUpon>201701121117207_AddMetadataSortOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811081250582_AddStatisticalData.resx">
+      <DependentUpon>201811081250582_AddStatisticalData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

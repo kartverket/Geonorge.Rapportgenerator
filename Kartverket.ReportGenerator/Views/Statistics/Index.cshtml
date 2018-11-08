@@ -1,0 +1,97 @@
+﻿@using Kartverket.ReportApi
+@model Kartverket.ReportApi.ReportResult
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Statistikk</h3>
+@section breadcrumb {
+    <li>Statistikk</li>
+}
+    <form>
+        <div class="row">
+            <div class="col-md-5">
+                <p>
+                    Velg innhold (antall):
+                </p>
+                <div class="custom-select">
+                    <select required name="content" class="chosen-select form-control">
+                        <optgroup label="Metadata">
+                            <option selected>metadata totalt</option>
+                            <option>datasett</option>
+                            <option>tjenester</option>
+                            <option>applikasjoner</option>
+                            <option>tjenestelag</option>
+                        </optgroup>
+                        <optgroup label="Register">
+                            <option>produktspesifikasjoner</option>
+                            <option>tegneregler</option>
+                            <option>produktark</option>
+                            <option>kartografi-filer</option>
+                            <option>symboler</option>
+                            <option>symbolpakker</option>
+                            <option>kodelister totalt og antall kodelisteverdier?)</option>
+                            <option>kodelister under kodeliste(kun Byggesøknad med underliggende kodelister) (og antall kodelisteverdier?)</option>
+                            <option>metdatakodelister (og antall kodelisteverdier?)</option>
+                            <option>organisasjoner</option>
+                            <option>EPSG-koder</option>
+                            <option>SOSI-kodelister i SOSI kodelisteregisteret (og antall kodelisteverdier?)</option>
+                       </optgroup>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <p>
+                    Organisasjon:
+                </p>
+                <div class="custom-select">
+                    <select name="organization" class="chosen-select form-control">
+                        <option>Alle</option>
+                        <option>Kartverket</option>
+                        <option>Norges geologiske undersøkelse</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div>
+                    Fra dato: <input type="text" value="01.11.2017" name="fromDate" maxlength="10" /> til dato: <input type="text" value="01.11.2018" name="toDate" maxlength="10" />
+                </div>
+            </div>
+            <div class="col-md-1">
+                <input type="submit" class="btn" value="Vis" />
+            </div>
+        </div>
+    </form>
+        <script src="~/Scripts/Chart.js"></script>
+
+        <canvas id="myChart" width="400" height="190"></canvas>
+        <script>
+
+    var dataLabels = [];
+
+    @foreach (var d in Model.Data.ToList())
+    {
+    @:dataLabels.push("@Html.Raw((d.Values[0].Key))");
+    }
+
+    var dataValues = [];
+    @foreach (var d in Model.Data.ToList())
+    {
+        @:dataValues.push("@d.Values[0].Value");
+    }
+
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data:
+                {
+                    labels: dataLabels,
+                    datasets: [{
+                       label: '@Html.Raw(Model.Data[0].Label)',
+                       data: dataValues,
+                    }]
+                }
+            });
+        </script>
+
+
