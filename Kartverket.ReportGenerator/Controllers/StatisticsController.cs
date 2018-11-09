@@ -17,10 +17,6 @@ namespace Kartverket.ReportGenerator.Controllers
         {
             var model = GetResult();
 
-            Query query = new Query();
-            query.Value = "Antall metadata totalt";
-            ViewBag.query = query;
-
             return View(model);
         }
 
@@ -100,15 +96,19 @@ namespace Kartverket.ReportGenerator.Controllers
             return (int) response["NumFound"];
         }
 
-        private Kartverket.ReportApi.ReportResult GetResult(string content = "antall metadata totalt", string organization = "")
+        private Kartverket.ReportApi.ReportResult GetResult(string content = "antall metadata totalt", string organization = "Kartverket")
         {
             ReportDbContext _db = new ReportDbContext();
-            var list = _db.StatisticalData.Where(c => c.Content == content).ToList();
-            //Todo group by date, sum (Count)
+            var list = _db.StatisticalData
+                .Where(c => c.Content == content && c.Organization == organization)
+                .GroupBy(x => x.Date)
+                .Select(g => new {
+                    Date = g.Key,
+                    Count = g.Sum(x => x.Count)
+                }).OrderBy(o => o.Date).ToList();
 
             Kartverket.ReportApi.ReportResult reportResult = new Kartverket.ReportApi.ReportResult();
             var data = new List<ReportApi.ReportResultData>();
-            int totalCount = 0;
 
             ReportApi.ReportResultData resultData = new ReportApi.ReportResultData();
 
@@ -116,8 +116,8 @@ namespace Kartverket.ReportGenerator.Controllers
 
                 resultData = new ReportApi.ReportResultData
                 {
-                    Label = list.First().Content,
-                    TotalDataCount = list.First().Count,
+                    Label = content,
+                    TotalDataCount = 0,
                     Values = new List<ReportApi.ReportResultDataValue>()
                 };
 
@@ -125,17 +125,16 @@ namespace Kartverket.ReportGenerator.Controllers
 
             foreach (var item in list)
             {
-               totalCount = totalCount + item.Count;
                 resultData.Values.Add(new ReportApi.ReportResultDataValue { Key = item.Date.ToString(), Value = item.Count.ToString() });
 
 
             }
 
-            resultData.TotalDataCount = totalCount;
-
             data.Add(resultData);
             reportResult.Data = data;
-            reportResult.TotalDataCount = totalCount;
+            reportResult.TotalDataCount = list.Max(m => m.Count);
+
+            ViewBag.MinCount = list.Min(m => m.Count);
 
             return reportResult;
         }

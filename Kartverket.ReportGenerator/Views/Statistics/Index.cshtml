@@ -4,7 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-<h3>Statistikk</h3>
 @section breadcrumb {
     <li>Statistikk</li>
 }
@@ -12,12 +11,12 @@
         <div class="row">
             <div class="col-md-5">
                 <p>
-                    Velg innhold (antall):
+                    Velg innhold:
                 </p>
                 <div class="custom-select">
                     <select required name="content" class="chosen-select form-control">
                         <optgroup label="Metadata">
-                            <option selected>metadata totalt</option>
+                            <option selected>Antall metadata totalt</option>
                             <option>datasett</option>
                             <option>tjenester</option>
                             <option>applikasjoner</option>
@@ -47,7 +46,7 @@
                 <div class="custom-select">
                     <select name="organization" class="chosen-select form-control">
                         <option>Alle</option>
-                        <option>Kartverket</option>
+                        <option selected>Kartverket</option>
                         <option>Norges geologiske undersøkelse</option>
                     </select>
                 </div>
@@ -66,18 +65,22 @@
 
         <canvas id="myChart" width="400" height="190"></canvas>
         <script>
-
     var dataLabels = [];
 
     @foreach (var d in Model.Data.ToList())
     {
-    @:dataLabels.push("@Html.Raw((d.Values[0].Key))");
+        foreach(var v in d.Values) { 
+    @:dataLabels.push("@Html.Raw((v.Key))");
+       }
     }
 
     var dataValues = [];
     @foreach (var d in Model.Data.ToList())
     {
-        @:dataValues.push("@d.Values[0].Value");
+        foreach (var v in d.Values)
+        {
+        @:dataValues.push("@v.Value");
+           }
     }
 
             var ctx = document.getElementById("myChart");
@@ -90,7 +93,17 @@
                        label: '@Html.Raw(Model.Data[0].Label)',
                        data: dataValues,
                     }]
-                }
+                },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min: @(ViewBag.MinCount),
+                        max: @(Model.TotalDataCount),
+                        }
+                }]
+            }
+        }
             });
         </script>
 
