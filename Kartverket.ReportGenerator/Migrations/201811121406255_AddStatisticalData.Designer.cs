@@ -6,14 +6,14 @@ namespace Kartverket.ReportGenerator.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
+    [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
     public sealed partial class AddStatisticalData : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(AddStatisticalData));
         
         string IMigrationMetadata.Id
         {
-            get { return "201811081250582_AddStatisticalData"; }
+            get { return "201811121406255_AddStatisticalData"; }
         }
         
         string IMigrationMetadata.Source

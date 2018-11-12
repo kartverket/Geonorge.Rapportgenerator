@@ -9,6 +9,9 @@ using System.Web.Mvc;
 
 namespace Kartverket.ReportGenerator.Controllers
 {
+
+    //Todo refactor, use DI, set up async execution queue?
+
     [Authorize]
     public class StatisticsController : Controller
     {
@@ -29,34 +32,63 @@ namespace Kartverket.ReportGenerator.Controllers
 
         private void CreateResult()
         {
+            ReportDbContext _db = new ReportDbContext();
+
             DateTime date = DateTime.Now;
 
-            ReportDbContext _db = new ReportDbContext();
-            List<string> contents = new List<string>();
-            contents.Add("antall metadata totalt");
-            contents.Add("antall produktspesifikasjoner i produktspesifikasjonsregisteret");
+            List<string> measurements = new List<string>();
+            const string NumberOfMetadataTotal = "Antall metadata totalt"; 
+            measurements.Add(NumberOfMetadataTotal);
+            const string NumberOfProductSpesifications = "Antall produktspesifikasjoner i produktspesifikasjonsregisteret";
+            measurements.Add(NumberOfProductSpesifications);
 
+            foreach (var measurement in measurements)
+            {
+                int count = 0;
+
+                if (measurement == NumberOfMetadataTotal)
+                {
+                    List<string> organizations = GetTotalMetadataOrganizations();
+
+                    foreach (var organization in organizations)
+                    {
+                        count = GetTotalMetadata(organization);
+                        _db.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
+                    }
+                }
+                else if (measurement == NumberOfProductSpesifications)
+                {
+                List<string> organizations = GetTotalProductspesificationsOrganizations();
+                foreach (var organization in organizations)
+                    {
+                        count = GetTotalProductspesifications(organization);
+                        _db.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
+                    }
+                }
+
+                _db.SaveChanges();
+
+            }
+        }
+
+        private List<string> GetTotalMetadataOrganizations()
+        {
+            //Todo implement dynamic
             List<string> organizations = new List<string>();
             organizations.Add("Kartverket");
             organizations.Add("Norges geologiske undersøkelse");
 
-            foreach (var content in contents)
-            {
-                foreach(var organization in organizations)
-                {
-                  int count = 0;
-                    if (content == "antall metadata totalt")
-                    {
-                        count = GetTotalMetadata(organization);
-                    }
-                    else if (content == "antall produktspesifikasjoner i produktspesifikasjonsregisteret")
-                    {
-                        count = GetTotalProductspesifications(organization);
-                    }
-                    _db.StatisticalData.Add(new Models.statistics.Data { Date = date ,  Content = content, Organization = organization, Count = count });
-                    _db.SaveChanges();
-                }
-            }
+            return organizations;
+        }
+
+        private List<string> GetTotalProductspesificationsOrganizations()
+        {
+            //Todo implement dynamic
+            List<string> organizations = new List<string>();
+            organizations.Add("Kartverket");
+            organizations.Add("Norges geologiske undersøkelse");
+
+            return organizations;
         }
 
         private int GetTotalProductspesifications(string organization)
@@ -96,11 +128,11 @@ namespace Kartverket.ReportGenerator.Controllers
             return (int) response["NumFound"];
         }
 
-        private Kartverket.ReportApi.ReportResult GetResult(string content = "antall metadata totalt", string organization = "Kartverket")
+        private Kartverket.ReportApi.ReportResult GetResult(string measurement = "Antall metadata totalt", string organization = "Kartverket")
         {
             ReportDbContext _db = new ReportDbContext();
             var list = _db.StatisticalData
-                .Where(c => c.Content == content && c.Organization == organization)
+                .Where(c => c.Measurement == measurement && c.Organization == organization)
                 .GroupBy(x => x.Date)
                 .Select(g => new {
                     Date = g.Key,
@@ -116,7 +148,7 @@ namespace Kartverket.ReportGenerator.Controllers
 
                 resultData = new ReportApi.ReportResultData
                 {
-                    Label = content,
+                    Label = measurement,
                     TotalDataCount = 0,
                     Values = new List<ReportApi.ReportResultDataValue>()
                 };
@@ -126,7 +158,6 @@ namespace Kartverket.ReportGenerator.Controllers
             foreach (var item in list)
             {
                 resultData.Values.Add(new ReportApi.ReportResultDataValue { Key = item.Date.ToString(), Value = item.Count.ToString() });
-
 
             }
 
