@@ -6,12 +6,6 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Kartverket.ReportGenerator.Models;
 using Kartverket.ReportGenerator.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
 
 namespace Kartverket.ReportGenerator
 {
@@ -22,6 +16,7 @@ namespace Kartverket.ReportGenerator
             // in app
             builder.RegisterType<RegisterService>().As<IRegisterService>();
             builder.RegisterType<ReportService>().As<IReportService>();
+            builder.RegisterType<StatisticsService>().As<IStatisticsService>();
 
             builder.RegisterControllers(typeof(WebApiApplication).Assembly).PropertiesAutowired();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();

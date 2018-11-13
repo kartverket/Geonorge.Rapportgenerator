@@ -1,17 +1,18 @@
 ﻿@using Kartverket.ReportApi
-@model Kartverket.ReportApi.ReportResult
+@model Kartverket.ReportGenerator.Models.StatisticsReport
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Innholdsstatistikk";
 }
 
 @section breadcrumb {
-    <li>Statistikk</li>
+<li>@ViewBag.Title</li>
 }
+<h3>@ViewBag.Title</h3>
     <form>
         <div class="row">
             <div class="col-md-5">
                 <p>
-                    Velg innhold:
+                    Innhold:
                 </p>
                 <div class="custom-select">
                     <select required name="content" class="chosen-select form-control">
@@ -67,7 +68,7 @@
         <script>
     var dataLabels = [];
 
-    @foreach (var d in Model.Data.ToList())
+    @foreach (var d in Model.ReportResult.Data.ToList())
     {
         foreach(var v in d.Values) { 
     @:dataLabels.push("@Html.Raw((v.Key))");
@@ -75,7 +76,7 @@
     }
 
     var dataValues = [];
-    @foreach (var d in Model.Data.ToList())
+    @foreach (var d in Model.ReportResult.Data.ToList())
     {
         foreach (var v in d.Values)
         {
@@ -90,7 +91,7 @@
                 {
                     labels: dataLabels,
                     datasets: [{
-                       label: '@Html.Raw(Model.Data[0].Label)',
+                       label: '@Html.Raw(Model.ReportResult.Data[0].Label)',
                        data: dataValues,
                     }]
                 },
@@ -98,8 +99,8 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        min: @(ViewBag.MinCount),
-                        max: @(Model.TotalDataCount),
+                        min: @(Model.MinimumCount),
+                        max: @(Model.ReportResult.TotalDataCount),
                         }
                 }]
             }
