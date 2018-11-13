@@ -13,6 +13,8 @@ namespace Kartverket.ReportGenerator.Services
     {
         private readonly ReportDbContext _dbContext;
 
+
+
         public StatisticsService(ReportDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -22,17 +24,13 @@ namespace Kartverket.ReportGenerator.Services
         {
             DateTime date = DateTime.Now;
 
-            List<string> measurements = new List<string>();
-            const string NumberOfMetadataTotal = "Antall metadata totalt";
-            measurements.Add(NumberOfMetadataTotal);
-            const string NumberOfProductSpesifications = "Antall produktspesifikasjoner i produktspesifikasjonsregisteret";
-            measurements.Add(NumberOfProductSpesifications);
+            List<string> measurements = GetMeasurements(); 
 
             foreach (var measurement in measurements)
             {
                 int count = 0;
 
-                if (measurement == NumberOfMetadataTotal)
+                if (measurement == Measurement.NumberOfMetadataTotal)
                 {
                     List<string> organizations = GetTotalMetadataOrganizations();
 
@@ -42,7 +40,7 @@ namespace Kartverket.ReportGenerator.Services
                         _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
                     }
                 }
-                else if (measurement == NumberOfProductSpesifications)
+                else if (measurement == Measurement.NumberOfProductSpesifications)
                 {
                     List<string> organizations = GetTotalProductspesificationsOrganizations();
                     foreach (var organization in organizations)
@@ -55,6 +53,16 @@ namespace Kartverket.ReportGenerator.Services
                 _dbContext.SaveChanges();
 
             }
+        }
+
+        private List<string> GetMeasurements()
+        {
+            List<string> measurements = new List<string>();
+
+            measurements.Add(Measurement.NumberOfMetadataTotal);
+            measurements.Add(Measurement.NumberOfProductSpesifications);
+
+            return measurements;
         }
 
         private List<string> GetTotalMetadataOrganizations()
@@ -114,12 +122,12 @@ namespace Kartverket.ReportGenerator.Services
             return (int)response["NumFound"];
         }
 
-        public StatisticsReport GetReport(string measurement = "Antall metadata totalt", string organization = "Kartverket")
+        public StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate)
         {
             StatisticsReport statisticsReport = new StatisticsReport();
 
             var list = _dbContext.StatisticalData
-                .Where(c => c.Measurement == measurement && c.Organization == organization)
+                .Where(c => c.Measurement == measurement && c.Organization == organization && (c.Date >= fromDate && c.Date <= toDate))
                 .GroupBy(x => x.Date)
                 .Select(g => new {
                     Date = g.Key,
@@ -127,43 +135,60 @@ namespace Kartverket.ReportGenerator.Services
                 }).OrderBy(o => o.Date).ToList();
 
             ReportResult reportResult = new ReportResult();
-            var data = new List<ReportApi.ReportResultData>();
+            var data = new List<ReportResultData>();
 
-            ReportApi.ReportResultData resultData = new ReportApi.ReportResultData();
+            ReportResultData resultData = new ReportResultData();
 
-            if (list.Count > 0)
+            resultData = new ReportResultData
             {
-
-                resultData = new ReportApi.ReportResultData
-                {
-                    Label = measurement,
-                    TotalDataCount = 0,
-                    Values = new List<ReportApi.ReportResultDataValue>()
-                };
-
-            }
+                Label = measurement,
+                TotalDataCount = 0,
+                Values = new List<ReportResultDataValue>()
+            };
 
             foreach (var item in list)
             {
-                resultData.Values.Add(new ReportApi.ReportResultDataValue { Key = item.Date.ToString(), Value = item.Count.ToString() });
-
+                resultData.Values.Add(new ReportResultDataValue { Key = item.Date.ToString(), Value = item.Count.ToString() });
             }
 
             data.Add(resultData);
             reportResult.Data = data;
-            reportResult.TotalDataCount = list.Max(m => m.Count);
+
+            if(list.Count > 0)
+                reportResult.TotalDataCount = list.Max(m => m.Count);
 
             statisticsReport.ReportResult = reportResult;
 
-            statisticsReport.MinimumCount = list.Min(m => m.Count);
+            if (list.Count > 0)
+                statisticsReport.MinimumCount = list.Min(m => m.Count);
+
+            statisticsReport.MeasurementsAvailable = GetMeasurements();
+            statisticsReport.OrganizationsAvailable = GetOrganizations();
+
+            statisticsReport.MeasurementSelected = measurement;
+            statisticsReport.OrganizationSelected = organization;
+
+            statisticsReport.FromDate = fromDate;
+            statisticsReport.ToDate = toDate;
 
             return statisticsReport;
         }
+
+        private List<string> GetOrganizations()
+        {
+            return _dbContext.StatisticalData.Select(o => o.Organization).Distinct().ToList();
+        }
+    }
+
+    public static class Measurement
+    {
+        public const string NumberOfMetadataTotal = "Antall metadata totalt";
+        public const string NumberOfProductSpesifications = "Antall produktspesifikasjoner i produktspesifikasjonsregisteret";
     }
 
     public interface IStatisticsService
     {
         void CreateReport();
-        StatisticsReport GetReport(string measurement = "Antall metadata totalt", string organization = "Kartverket");
+        StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate);
     }
 }

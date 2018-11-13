@@ -24,9 +24,19 @@ namespace Kartverket.ReportGenerator.Controllers
         }
 
         // GET: Statistics
-        public ActionResult Index()
+        public ActionResult Index(string measurement, string organization, DateTime? FromDate, DateTime? ToDate)
         {
-            var model = _statisticsService.GetReport();
+            if (string.IsNullOrEmpty(measurement))
+                measurement = Measurement.NumberOfMetadataTotal;
+
+            if (!FromDate.HasValue)
+                FromDate = DateTime.Now.AddYears(-1);
+
+            if (!ToDate.HasValue)
+                ToDate = DateTime.Now;
+
+
+            var model = _statisticsService.GetReport(measurement, organization, FromDate, ToDate);
 
             return View(model);
         }

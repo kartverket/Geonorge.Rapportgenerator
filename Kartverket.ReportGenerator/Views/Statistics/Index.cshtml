@@ -15,28 +15,11 @@
                     Innhold:
                 </p>
                 <div class="custom-select">
-                    <select required name="content" class="chosen-select form-control">
-                        <optgroup label="Metadata">
-                            <option selected>Antall metadata totalt</option>
-                            <option>datasett</option>
-                            <option>tjenester</option>
-                            <option>applikasjoner</option>
-                            <option>tjenestelag</option>
-                        </optgroup>
-                        <optgroup label="Register">
-                            <option>produktspesifikasjoner</option>
-                            <option>tegneregler</option>
-                            <option>produktark</option>
-                            <option>kartografi-filer</option>
-                            <option>symboler</option>
-                            <option>symbolpakker</option>
-                            <option>kodelister totalt og antall kodelisteverdier?)</option>
-                            <option>kodelister under kodeliste(kun Byggesøknad med underliggende kodelister) (og antall kodelisteverdier?)</option>
-                            <option>metdatakodelister (og antall kodelisteverdier?)</option>
-                            <option>organisasjoner</option>
-                            <option>EPSG-koder</option>
-                            <option>SOSI-kodelister i SOSI kodelisteregisteret (og antall kodelisteverdier?)</option>
-                       </optgroup>
+                    <select required name="measurement" class="chosen-select form-control">
+                        @foreach (var measurement in Model.MeasurementsAvailable)
+                        {
+                            <option value="@measurement" @(measurement == Model.MeasurementSelected ? "selected" : "") >@measurement</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -47,14 +30,16 @@
                 <div class="custom-select">
                     <select name="organization" class="chosen-select form-control">
                         <option>Alle</option>
-                        <option selected>Kartverket</option>
-                        <option>Norges geologiske undersøkelse</option>
+                        @foreach (var organization in Model.OrganizationsAvailable)
+                        {
+                            <option value="@organization" @(organization == Model.OrganizationSelected ? "selected" : "")>@organization</option>
+                        }
                     </select>
                 </div>
             </div>
             <div class="col-md-3">
                 <div>
-                    Fra dato: <input type="text" value="01.11.2017" name="fromDate" maxlength="10" /> til dato: <input type="text" value="01.11.2018" name="toDate" maxlength="10" />
+                    @Html.LabelFor(m => m.FromDate) @Html.TextBoxFor(m => m.FromDate) <br /> @Html.LabelFor(m => m.ToDate): @Html.TextBoxFor(m => m.ToDate)
                 </div>
             </div>
             <div class="col-md-1">
@@ -69,20 +54,20 @@
     var dataLabels = [];
 
     @foreach (var d in Model.ReportResult.Data.ToList())
-    {
+     {
         foreach(var v in d.Values) { 
-    @:dataLabels.push("@Html.Raw((v.Key))");
+        @:dataLabels.push("@Html.Raw((v.Key))");
        }
-    }
+     }
 
     var dataValues = [];
     @foreach (var d in Model.ReportResult.Data.ToList())
-    {
+     {
         foreach (var v in d.Values)
         {
         @:dataValues.push("@v.Value");
-           }
-    }
+        }
+     }
 
             var ctx = document.getElementById("myChart");
             var myChart = new Chart(ctx, {
