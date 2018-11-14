@@ -82,10 +82,160 @@ namespace Kartverket.ReportGenerator.Services
                         _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
                     }
                 }
+                else if (measurement == Measurement.NumberOfCartographyDocuments)
+                {
+
+                    var result = GetRegisterResult("5eacb130-d61f-469d-8454-e96943491ba0");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfProductsheets)
+                {
+
+                    var result = GetRegisterResult("a42bc2b3-2314-4b7e-8007-71d9b10f2c04");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfCartographyFiles)
+                {
+
+                    var result = GetRegisterCartographyResult();
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+
+                else if (measurement == Measurement.NumberOfSymbols)
+                {
+
+                    var result = GetRegisterSymbolResult();
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfSymbolPackages)
+                {
+
+                    var result = GetRegisterSymbolPackagesResult();
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
 
                 _dbContext.SaveChanges();
 
             }
+        }
+
+        private Dictionary<string, int> GetRegisterSymbolPackagesResult()
+        {
+            //Todo fix method
+
+            Dictionary<string, KeyValuePair<string, int>> packages = new Dictionary<string, KeyValuePair<string, int>>();
+
+            var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "symbol/api/symbols";
+
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            c.Headers.Remove("Accept-Language");
+            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JArray.Parse(data);
+
+            foreach (var item in response)
+            {
+                JToken packageToken = item["PackageUuid"];
+                string package = packageToken?.ToString();
+
+                JToken ownerToken = item["Owner"];
+                string owner = ownerToken?.ToString();
+
+                if (!packages.ContainsKey(package))
+                {
+
+                    packages.Add(package, new KeyValuePair<string, int>(owner, 1));
+                }
+                else {
+
+                    if (!packages[package].Key.Contains(owner))
+                    { 
+                        int count = packages[package].Value + 1;
+                        var newEntry = new KeyValuePair<string, int>(packages[package].Key, count);
+                        packages[package] = newEntry;
+                    }
+                }
+            }
+
+
+            Dictionary<string, int> result = new Dictionary<string, int>();
+
+            return result;
+        }
+
+        private Dictionary<string, int> GetRegisterSymbolResult()
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "symbol/api/symbols";
+
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            c.Headers.Remove("Accept-Language");
+            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JArray.Parse(data);
+
+            foreach (var item in response)
+            {
+                JToken ownerToken = item["Owner"];
+                string owner = ownerToken?.ToString();
+
+                if (!result.ContainsKey(owner))
+                    result.Add(owner, 1);
+                else
+                    result[owner] = result[owner] + 1;
+
+            }
+
+            return result;
+        }
+
+        private Dictionary<string, int> GetRegisterCartographyResult()
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "kartografi/api/kartografi";
+
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            c.Headers.Remove("Accept-Language");
+            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JArray.Parse(data);
+
+            foreach (var item in response)
+            {
+                JToken ownerToken = item["Owner"];
+                string owner = ownerToken?.ToString();
+
+                if (!result.ContainsKey(owner))
+                    result.Add(owner, 1);
+                else
+                    result[owner] = result[owner] + 1;
+
+            }
+
+            return result;
         }
 
         private Dictionary<string, int> GetRegisterResult(string systemId)
@@ -216,6 +366,11 @@ namespace Kartverket.ReportGenerator.Services
             measurements.Add(Measurement.NumberOfMetadataForApplicationsTotal);
             measurements.Add(Measurement.NumberOfMetadataForServiceLayerTotal);
             measurements.Add(Measurement.NumberOfProductSpesifications);
+            measurements.Add(Measurement.NumberOfCartographyDocuments);
+            measurements.Add(Measurement.NumberOfProductsheets);
+            measurements.Add(Measurement.NumberOfCartographyFiles);
+            measurements.Add(Measurement.NumberOfSymbols);
+            measurements.Add(Measurement.NumberOfSymbolPackages);
 
             return measurements;
         }
@@ -231,11 +386,26 @@ namespace Kartverket.ReportGenerator.Services
         public const string NumberOfMetadataForServiceLayerTotal = "Antall metadata for tjenestelag";
 
         public const string NumberOfProductSpesifications = "Antall produktspesifikasjoner i produktspesifikasjonsregisteret";
+        public const string NumberOfCartographyDocuments = "Antall tegneregler i tegneregelregisteret";
+        public const string NumberOfProductsheets = "Antall produktark i produktarkregisteret";
 
-        
+        public const string NumberOfCartographyFiles = "Antall kartografi-filer i digital kartografi-registeret";
+        public const string NumberOfSymbols = "Antall symboler i symbolregisteret";
+        public const string NumberOfSymbolPackages = "Antall symbolpakker i symbolregisteret";
 
+        //public const string NumberOfCodelists = "Antall kodelister under kodeliste";
+        //public const string NumberOfCodelists = "Antall kodelisteverdier under kodeliste";
 
+        //public const string NumberOfProductSpesifications = "Antall metdatakodelister";
+        //public const string NumberOfProductSpesifications = "Antall metdatakodelisteverdier";
 
+        //public const string NumberOfProductSpesifications = "Antall organisasjoner i organisasjonsregister";
+        //public const string NumberOfProductSpesifications = "Antall EPSG-koder i EPSG-koderegister ";
+
+        //public const string NumberOfProductSpesifications = "Antall SOSI-kodelister i SOSI kodelisteregisteret";
+        //public const string NumberOfProductSpesifications = "Antall SOSI-kodelisteverdier i SOSI kodelisteregisteret";
+
+        //public const string NumberOfProductSpesifications = "Antall kodelister totalt i hele registeret"; //Summere opp 1)kodelister under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
     }
 
     public interface IStatisticsService
