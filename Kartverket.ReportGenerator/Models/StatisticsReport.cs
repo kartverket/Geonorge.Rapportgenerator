@@ -15,11 +15,7 @@ namespace Kartverket.ReportGenerator.Models
         public List<string> MeasurementsAvailable { get; set; }
         public string OrganizationSelected { get; set; }
         public List<string> OrganizationsAvailable { get; set; }
-        [Display(Name = "Fra dato")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? FromDate { get; set; } = DateTime.Now.AddYears(-1);
-        [Display(Name = "Til dato")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime? ToDate { get; set; } = DateTime.Now;
 
     }

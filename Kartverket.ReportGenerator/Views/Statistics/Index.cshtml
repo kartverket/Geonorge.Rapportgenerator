@@ -39,7 +39,8 @@
             </div>
             <div class="col-md-3">
                 <div>
-                    @Html.LabelFor(m => m.FromDate) @Html.TextBoxFor(m => m.FromDate) <br /> @Html.LabelFor(m => m.ToDate): @Html.TextBoxFor(m => m.ToDate)
+                    Fra dato: <input type="date" name="FromDate" value="@Model.FromDate.Value.ToString("yyyy-MM-dd")" /><br />
+                    Til dato: <input type="date" name="ToDate" value="@Model.ToDate.Value.ToString("yyyy-MM-dd")" />
                 </div>
             </div>
             <div class="col-md-1">
@@ -55,30 +56,32 @@
 
     @foreach (var d in Model.ReportResult.Data.ToList())
      {
-        foreach(var v in d.Values) { 
-        @:dataLabels.push("@Html.Raw((v.Key))");
-       }
-     }
+        foreach(var v in d.Values) {
+                        @:dataLabels.push("@Html.Raw((v.Key))");
+           }
+            }
 
-    var dataValues = [];
-    @foreach (var d in Model.ReportResult.Data.ToList())
-     {
-        foreach (var v in d.Values)
-        {
-        @:dataValues.push("@v.Value");
-        }
-     }
-
-            var ctx = document.getElementById("myChart");
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data:
+            var dataValues = [];
+            @foreach(var d in Model.ReportResult.Data.ToList())
+            {
+                foreach (var v in d.Values)
                 {
-                    labels: dataLabels,
-                    datasets: [{
+                    @:dataValues.push("@v.Value");
+        }
+        }
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+
+            type: 'line',
+            data:
+                {
+
+                labels: dataLabels,
+                datasets: [{
                        label: '@Html.Raw(Model.ReportResult.Data[0].Label)',
-                       data: dataValues,
-                    }]
+                   data: dataValues,
+                        }]
                 },
         options: {
             scales: {
@@ -91,6 +94,6 @@
             }
         }
             });
-        </script>
+                    </script>
 
 

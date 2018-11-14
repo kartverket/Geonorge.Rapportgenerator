@@ -124,6 +124,9 @@ namespace Kartverket.ReportGenerator.Services
 
         public StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate)
         {
+            TimeSpan ts = new TimeSpan(23,59,59);
+            toDate = toDate.Value.Date + ts;
+
             StatisticsReport statisticsReport = new StatisticsReport();
 
             var list = _dbContext.StatisticalData
