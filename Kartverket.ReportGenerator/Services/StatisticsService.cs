@@ -13,8 +13,6 @@ namespace Kartverket.ReportGenerator.Services
     {
         private readonly ReportDbContext _dbContext;
 
-
-
         public StatisticsService(ReportDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -28,26 +26,29 @@ namespace Kartverket.ReportGenerator.Services
 
             foreach (var measurement in measurements)
             {
-                int count = 0;
-
                 if (measurement == Measurement.NumberOfMetadataTotal)
                 {
-                    List<string> organizations = GetTotalMetadataOrganizations();
+                    var result = GetMetadataResult("");
 
-                    foreach (var organization in organizations)
+                    foreach (var data in result)
                     {
-                        count = GetTotalMetadata(organization);
-                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
                     }
                 }
                 else if (measurement == Measurement.NumberOfProductSpesifications)
                 {
-                    List<string> organizations = GetTotalProductspesificationsOrganizations();
-                    foreach (var organization in organizations)
-                    {
-                        count = GetTotalProductspesifications(organization);
-                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
-                    }
+                    //Todo change to:
+                    //https://register.geonorge.no/api/ApiRoot?systemid=8e726684-f216-4497-91be-6ab2496a84d3
+                    // Count Registeritem owner
+                    //<Dictionary<string, int> to count organizations
+                    //GetRegister(systemid)
+
+                    //List<string> organizations = GetTotalProductspesificationsOrganizations();
+                    //foreach (var organization in organizations)
+                    //{
+                    //    count = GetTotalProductspesifications(organization);
+                    //    _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
+                    //}
                 }
 
                 _dbContext.SaveChanges();
@@ -55,71 +56,32 @@ namespace Kartverket.ReportGenerator.Services
             }
         }
 
-        private List<string> GetMeasurements()
+        private Dictionary<string, int> GetMetadataResult(string type)
         {
-            List<string> measurements = new List<string>();
+            Dictionary<string, int> result = new Dictionary<string, int>();
 
-            measurements.Add(Measurement.NumberOfMetadataTotal);
-            measurements.Add(Measurement.NumberOfProductSpesifications);
+            var url = "http://kartkatalog.dev.geonorge.no/api/search";
 
-            return measurements;
-        }
+            if (type == "dataset")
+                url = "";  //todo
 
-        private List<string> GetTotalMetadataOrganizations()
-        {
-            //Todo implement dynamic
-            List<string> organizations = new List<string>();
-            organizations.Add("Kartverket");
-            organizations.Add("Norges geologiske undersøkelse");
-
-            return organizations;
-        }
-
-        private List<string> GetTotalProductspesificationsOrganizations()
-        {
-            //Todo implement dynamic
-            List<string> organizations = new List<string>();
-            organizations.Add("Kartverket");
-            organizations.Add("Norges geologiske undersøkelse");
-
-            return organizations;
-        }
-
-        private int GetTotalProductspesifications(string organization)
-        {
-            int counter = 0;
-            var url = "http://register.dev.geonorge.no/api/produktspesifikasjoner.json";
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             c.Headers.Remove("Accept-Language");
             c.Headers.Add("Accept-Language", Culture.NorwegianCode);
             var data = c.DownloadString(url);
             var response = Newtonsoft.Json.Linq.JObject.Parse(data);
+            var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
 
-            var result = response["containeditems"];
-            foreach (var item in result)
+            foreach (var item in organizations)
             {
-                JToken ownerToken = item["owner"];
-                string ownerValue = ownerToken?.ToString();
+                var organization = item.SelectToken("Name").ToString();
+                var count = (int) item.SelectToken("Count");
 
-                if (!string.IsNullOrWhiteSpace(ownerValue) && ownerValue == organization)
-                    counter++;
-            }
+                result.Add(organization, count);
+            } 
 
-            return counter;
-        }
-
-        private int GetTotalMetadata(string organization)
-        {
-            var url = "http://kartkatalog.dev.geonorge.no/api/search?facets%5b0%5dname=organization&facets%5b0%5dvalue=" + HttpContext.Current.Server.UrlEncode(organization);
-            System.Net.WebClient c = new System.Net.WebClient();
-            c.Encoding = System.Text.Encoding.UTF8;
-            c.Headers.Remove("Accept-Language");
-            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
-            var data = c.DownloadString(url);
-            var response = Newtonsoft.Json.Linq.JObject.Parse(data);
-
-            return (int)response["NumFound"];
+            return result;
         }
 
         public StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate)
@@ -130,8 +92,6 @@ namespace Kartverket.ReportGenerator.Services
             StatisticsReport statisticsReport = new StatisticsReport();
 
             bool organizationSelected = !string.IsNullOrEmpty(organization);
-
-            //_dbContext.Database.Log += s => System.Diagnostics.Debug.WriteLine(s);
 
             var list = _dbContext.StatisticalData
                 .Where(c => c.Measurement == measurement && (!organizationSelected || (organizationSelected && c.Organization == organization)) && (c.Date >= fromDate && c.Date <= toDate))
@@ -184,6 +144,16 @@ namespace Kartverket.ReportGenerator.Services
         private List<string> GetOrganizations()
         {
             return _dbContext.StatisticalData.Select(o => o.Organization).Distinct().ToList();
+        }
+
+        private List<string> GetMeasurements()
+        {
+            List<string> measurements = new List<string>();
+
+            measurements.Add(Measurement.NumberOfMetadataTotal);
+            measurements.Add(Measurement.NumberOfProductSpesifications);
+
+            return measurements;
         }
     }
 
