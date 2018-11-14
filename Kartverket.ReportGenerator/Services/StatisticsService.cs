@@ -129,8 +129,12 @@ namespace Kartverket.ReportGenerator.Services
 
             StatisticsReport statisticsReport = new StatisticsReport();
 
+            bool organizationSelected = !string.IsNullOrEmpty(organization);
+
+            //_dbContext.Database.Log += s => System.Diagnostics.Debug.WriteLine(s);
+
             var list = _dbContext.StatisticalData
-                .Where(c => c.Measurement == measurement && c.Organization == organization && (c.Date >= fromDate && c.Date <= toDate))
+                .Where(c => c.Measurement == measurement && (!organizationSelected || (organizationSelected && c.Organization == organization)) && (c.Date >= fromDate && c.Date <= toDate))
                 .GroupBy(x => x.Date)
                 .Select(g => new {
                     Date = g.Key,

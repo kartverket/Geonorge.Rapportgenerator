@@ -29,7 +29,7 @@
                 </p>
                 <div class="custom-select">
                     <select name="organization" class="chosen-select form-control">
-                        <option>Alle</option>
+                        <option value="">Alle</option>
                         @foreach (var organization in Model.OrganizationsAvailable)
                         {
                             <option value="@organization" @(organization == Model.OrganizationSelected ? "selected" : "")>@organization</option>
