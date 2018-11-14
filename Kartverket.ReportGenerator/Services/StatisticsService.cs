@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Kartverket.ReportApi;
+using System.Web.Configuration;
 
 namespace Kartverket.ReportGenerator.Services
 {
@@ -29,6 +30,42 @@ namespace Kartverket.ReportGenerator.Services
                 if (measurement == Measurement.NumberOfMetadataTotal)
                 {
                     var result = GetMetadataResult("");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfMetadataForDatasetTotal)
+                {
+                    var result = GetMetadataResult("dataset");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfMetadataForServicesTotal)
+                {
+                    var result = GetMetadataResult("service");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfMetadataForApplicationsTotal)
+                {
+                    var result = GetMetadataResult("software");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
+                }
+                else if (measurement == Measurement.NumberOfMetadataForServiceLayerTotal)
+                {
+                    var result = GetMetadataResult("servicelayer");
 
                     foreach (var data in result)
                     {
@@ -60,10 +97,10 @@ namespace Kartverket.ReportGenerator.Services
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
 
-            var url = "http://kartkatalog.dev.geonorge.no/api/search";
+            var url = WebConfigurationManager.AppSettings["KartkatalogenUrl"] + "api/search";
 
-            if (type == "dataset")
-                url = "";  //todo
+            if (!string.IsNullOrEmpty(type))
+                url = url + "?facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
 
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
@@ -151,6 +188,10 @@ namespace Kartverket.ReportGenerator.Services
             List<string> measurements = new List<string>();
 
             measurements.Add(Measurement.NumberOfMetadataTotal);
+            measurements.Add(Measurement.NumberOfMetadataForDatasetTotal);
+            measurements.Add(Measurement.NumberOfMetadataForServicesTotal);
+            measurements.Add(Measurement.NumberOfMetadataForApplicationsTotal);
+            measurements.Add(Measurement.NumberOfMetadataForServiceLayerTotal);
             measurements.Add(Measurement.NumberOfProductSpesifications);
 
             return measurements;
@@ -160,7 +201,18 @@ namespace Kartverket.ReportGenerator.Services
     public static class Measurement
     {
         public const string NumberOfMetadataTotal = "Antall metadata totalt";
+
+        public const string NumberOfMetadataForDatasetTotal = "Antall metadata for datasett";
+        public const string NumberOfMetadataForServicesTotal = "Antall metadata for tjenester";
+        public const string NumberOfMetadataForApplicationsTotal = "Antall metadata for applikasjoner";
+        public const string NumberOfMetadataForServiceLayerTotal = "Antall metadata for tjenestelag";
+
         public const string NumberOfProductSpesifications = "Antall produktspesifikasjoner i produktspesifikasjonsregisteret";
+
+        
+
+
+
     }
 
     public interface IStatisticsService
