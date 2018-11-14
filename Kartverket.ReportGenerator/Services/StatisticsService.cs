@@ -74,23 +74,46 @@ namespace Kartverket.ReportGenerator.Services
                 }
                 else if (measurement == Measurement.NumberOfProductSpesifications)
                 {
-                    //Todo change to:
-                    //https://register.geonorge.no/api/ApiRoot?systemid=8e726684-f216-4497-91be-6ab2496a84d3
-                    // Count Registeritem owner
-                    //<Dictionary<string, int> to count organizations
-                    //GetRegister(systemid)
 
-                    //List<string> organizations = GetTotalProductspesificationsOrganizations();
-                    //foreach (var organization in organizations)
-                    //{
-                    //    count = GetTotalProductspesifications(organization);
-                    //    _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = organization, Measurement = measurement, Count = count });
-                    //}
+                    var result = GetRegisterResult("8e726684-f216-4497-91be-6ab2496a84d3");
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Key, Measurement = measurement, Count = data.Value });
+                    }
                 }
 
                 _dbContext.SaveChanges();
 
             }
+        }
+
+        private Dictionary<string, int> GetRegisterResult(string systemId)
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/ApiRoot?systemid=" + systemId;
+
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            c.Headers.Remove("Accept-Language");
+            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JObject.Parse(data);
+
+            var items = response["containeditems"];
+            foreach (var item in items)
+            {
+                JToken ownerToken = item["owner"];
+                string owner = ownerToken?.ToString();
+
+                if (!result.ContainsKey(owner))
+                    result.Add(owner, 1);
+                else
+                    result[owner] = result[owner] + 1;
+
+            }
+
+            return result;
         }
 
         private Dictionary<string, int> GetMetadataResult(string type)
