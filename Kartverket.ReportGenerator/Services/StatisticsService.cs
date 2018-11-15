@@ -141,9 +141,7 @@ namespace Kartverket.ReportGenerator.Services
 
         private Dictionary<string, int> GetRegisterSymbolPackagesResult()
         {
-            //Todo fix method
-
-            Dictionary<string, KeyValuePair<string, int>> packages = new Dictionary<string, KeyValuePair<string, int>>();
+            Dictionary<string, Dictionary<string, int>> organizationPackages = new Dictionary<string, Dictionary<string, int>>();
 
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "symbol/api/symbols";
 
@@ -156,30 +154,34 @@ namespace Kartverket.ReportGenerator.Services
 
             foreach (var item in response)
             {
-                JToken packageToken = item["PackageUuid"];
-                string package = packageToken?.ToString();
-
                 JToken ownerToken = item["Owner"];
                 string owner = ownerToken?.ToString();
 
-                if (!packages.ContainsKey(package))
-                {
+                JToken packageToken = item["PackageUuid"];
+                string package = packageToken?.ToString();
 
-                    packages.Add(package, new KeyValuePair<string, int>(owner, 1));
+                if (!organizationPackages.ContainsKey(owner))
+                {
+                    Dictionary<string, int> keyValuePairs = new Dictionary<string, int>();
+                    keyValuePairs.Add(package, 1);
+
+                    organizationPackages.Add(owner, keyValuePairs);
                 }
                 else {
 
-                    if (!packages[package].Key.Contains(owner))
-                    { 
-                        int count = packages[package].Value + 1;
-                        var newEntry = new KeyValuePair<string, int>(packages[package].Key, count);
-                        packages[package] = newEntry;
+                    if (!organizationPackages[owner].ContainsKey(package))
+                    {
+                        organizationPackages[owner].Add(package, 1);
                     }
                 }
             }
 
-
             Dictionary<string, int> result = new Dictionary<string, int>();
+
+            foreach (var organization in organizationPackages)
+            {
+                result.Add(organization.Key, organization.Value.Count);
+            }
 
             return result;
         }
