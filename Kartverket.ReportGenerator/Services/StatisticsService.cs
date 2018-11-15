@@ -134,9 +134,44 @@ namespace Kartverket.ReportGenerator.Services
                     }
                 }
 
+                else if (measurement == Measurement.NumberOfCodelists)
+                {
+                    var result = GetCodelists();
+
+                    foreach (var data in result)
+                    {
+                        _dbContext.StatisticalData.Add(new Models.Statistics { Date = date, Organization = data.Organization, Measurement = data.Measurement, Count = data.Count });
+                    }
+                }
+
                 _dbContext.SaveChanges();
 
             }
+        }
+
+        private List<Statistics> GetCodelists()
+        {
+            List<Statistics> codelists = new List<Statistics>();
+
+            string measurement = Measurement.NumberOfOrganizations;
+
+            var organizations = GetRegisterResult("fcb0685d-24eb-4156-9ac8-25fa30759094");
+
+            foreach (var data in organizations)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = measurement, Count = data.Value });
+            }
+
+            measurement = Measurement.NumberOfEpsgCodes;
+
+            var epsgs = GetRegisterResult("37b9dc41-d868-4cbc-84f9-39557041fb2c");
+
+            foreach (var data in epsgs)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = measurement, Count = data.Value });
+            }
+
+            return codelists;
         }
 
         private Dictionary<string, int> GetRegisterSymbolPackagesResult()
@@ -373,6 +408,9 @@ namespace Kartverket.ReportGenerator.Services
             measurements.Add(Measurement.NumberOfCartographyFiles);
             measurements.Add(Measurement.NumberOfSymbols);
             measurements.Add(Measurement.NumberOfSymbolPackages);
+            measurements.Add(Measurement.NumberOfCodelists);
+            measurements.Add(Measurement.NumberOfOrganizations);
+            measurements.Add(Measurement.NumberOfEpsgCodes);
 
             return measurements;
         }
@@ -395,19 +433,20 @@ namespace Kartverket.ReportGenerator.Services
         public const string NumberOfSymbols = "Antall symboler i symbolregisteret";
         public const string NumberOfSymbolPackages = "Antall symbolpakker i symbolregisteret";
 
-        //public const string NumberOfCodelists = "Antall kodelister under kodeliste";
+        public const string NumberOfCodelists = "Antall kodelister under kodeliste";
         //public const string NumberOfCodelists = "Antall kodelisteverdier under kodeliste";
 
-        //public const string NumberOfProductSpesifications = "Antall metdatakodelister";
-        //public const string NumberOfProductSpesifications = "Antall metdatakodelisteverdier";
+        //public const string NumberOfMetadataCodelists = "Antall metdatakodelister";
+        //public const string NumberOfMetadataCodelistValues = "Antall metdatakodelisteverdier";
 
-        //public const string NumberOfProductSpesifications = "Antall organisasjoner i organisasjonsregister";
-        //public const string NumberOfProductSpesifications = "Antall EPSG-koder i EPSG-koderegister ";
+        public const string NumberOfOrganizations = "Antall organisasjoner i organisasjonsregister";
+        public const string NumberOfEpsgCodes = "Antall EPSG-koder i EPSG-koderegister ";
 
         //public const string NumberOfProductSpesifications = "Antall SOSI-kodelister i SOSI kodelisteregisteret";
         //public const string NumberOfProductSpesifications = "Antall SOSI-kodelisteverdier i SOSI kodelisteregisteret";
 
         //public const string NumberOfProductSpesifications = "Antall kodelister totalt i hele registeret"; //Summere opp 1)kodelister under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
+        //public const string NumberOfProductSpesifications = "Antall kodelisteverdier totalt i hele registeret"; //Summere opp 1)kodelisteverdier under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
     }
 
     public interface IStatisticsService
