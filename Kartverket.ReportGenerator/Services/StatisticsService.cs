@@ -153,25 +153,81 @@ namespace Kartverket.ReportGenerator.Services
         {
             List<Statistics> codelists = new List<Statistics>();
 
-            string measurement = Measurement.NumberOfOrganizations;
-
             var organizations = GetRegisterResult("fcb0685d-24eb-4156-9ac8-25fa30759094");
 
             foreach (var data in organizations)
             {
-                codelists.Add(new Statistics { Organization = data.Key, Measurement = measurement, Count = data.Value });
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfOrganizations, Count = data.Value });
             }
-
-            measurement = Measurement.NumberOfEpsgCodes;
 
             var epsgs = GetRegisterResult("37b9dc41-d868-4cbc-84f9-39557041fb2c");
 
             foreach (var data in epsgs)
             {
-                codelists.Add(new Statistics { Organization = data.Key, Measurement = measurement, Count = data.Value });
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfEpsgCodes, Count = data.Value });
+            }
+
+            organizationCodeList = new OrganizationCodeList();
+            SetCodeListRegisterWithSubregister("28f22b09-098f-48e2-bc37-27fc63674318");
+
+            foreach (var data in organizationCodeList.Organizations)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfCodelists, Count = data.Value.CountCodeList });
+            }
+
+            foreach (var data in organizationCodeList.Organizations)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfCodelistValues, Count = data.Value.CountCodeListValues });
             }
 
             return codelists;
+        }
+
+
+        OrganizationCodeList organizationCodeList;
+
+        private void SetCodeListRegisterWithSubregister(string systemId)
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/ApiRoot?systemid=" + systemId;
+
+            System.Net.WebClient c = new System.Net.WebClient();
+            c.Encoding = System.Text.Encoding.UTF8;
+            c.Headers.Remove("Accept-Language");
+            c.Headers.Add("Accept-Language", Culture.NorwegianCode);
+            var data = c.DownloadString(url);
+            var response = Newtonsoft.Json.Linq.JObject.Parse(data);
+
+            JToken ownerToken = response["owner"];
+            string owner = ownerToken?.ToString();
+
+            if (!organizationCodeList.Organizations.ContainsKey(owner))
+                organizationCodeList.Organizations.Add(owner, new CodeList { CountCodeList = 0, CountCodeListValues = 0 });
+
+            var containedItemClassToken = response["containedItemClass"];
+            string containedItemClass = containedItemClassToken?.ToString();
+
+            var items = response["containeditems"];
+
+            if(containedItemClass == "CodelistValue")
+            {
+                organizationCodeList.Organizations[owner].CountCodeList = organizationCodeList.Organizations[owner].CountCodeList + 1;
+
+                foreach (var item in items)
+                {
+                    organizationCodeList.Organizations[owner].CountCodeListValues = organizationCodeList.Organizations[owner].CountCodeListValues + 1;
+                }
+            }
+
+
+            var containedSubRegisters = response["containedSubRegisters"];
+            foreach(var item in containedSubRegisters)
+            {
+                JToken uuidToken = item["uuid"];
+                string uuid = uuidToken?.ToString();
+
+                SetCodeListRegisterWithSubregister(uuid);
+            }
         }
 
         private Dictionary<string, int> GetRegisterSymbolPackagesResult()
@@ -409,11 +465,27 @@ namespace Kartverket.ReportGenerator.Services
             measurements.Add(Measurement.NumberOfSymbols);
             measurements.Add(Measurement.NumberOfSymbolPackages);
             measurements.Add(Measurement.NumberOfCodelists);
+            measurements.Add(Measurement.NumberOfCodelistValues);
             measurements.Add(Measurement.NumberOfOrganizations);
             measurements.Add(Measurement.NumberOfEpsgCodes);
 
             return measurements;
         }
+    }
+
+    internal class OrganizationCodeList
+    {
+        public OrganizationCodeList()
+        {
+            Organizations = new Dictionary<string, CodeList>();
+        }
+        public Dictionary<string, CodeList> Organizations;
+    }
+
+    internal class CodeList
+    {
+        public int CountCodeList { get; set; }
+        public int CountCodeListValues { get; set; }
     }
 
     public static class Measurement
@@ -434,7 +506,7 @@ namespace Kartverket.ReportGenerator.Services
         public const string NumberOfSymbolPackages = "Antall symbolpakker i symbolregisteret";
 
         public const string NumberOfCodelists = "Antall kodelister under kodeliste";
-        //public const string NumberOfCodelists = "Antall kodelisteverdier under kodeliste";
+        public const string NumberOfCodelistValues = "Antall kodelisteverdier under kodeliste";
 
         //public const string NumberOfMetadataCodelists = "Antall metdatakodelister";
         //public const string NumberOfMetadataCodelistValues = "Antall metdatakodelisteverdier";
