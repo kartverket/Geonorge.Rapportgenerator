@@ -153,11 +153,19 @@ namespace Kartverket.ReportGenerator.Services
         {
             List<Statistics> codelists = new List<Statistics>();
 
+            Dictionary<string, int> totalCodelists = new Dictionary<string, int>();
+            Dictionary<string, int> totalCodelistValues = new Dictionary<string, int>();
+
             var organizations = GetRegisterResult("fcb0685d-24eb-4156-9ac8-25fa30759094");
 
             foreach (var data in organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfOrganizations, Count = data.Value });
+
+                if (!totalCodelists.ContainsKey(data.Key))
+                    totalCodelists.Add(data.Key, 0);
+
+                totalCodelists[data.Key] = totalCodelists[data.Key] + data.Value;
             }
 
             var epsgs = GetRegisterResult("37b9dc41-d868-4cbc-84f9-39557041fb2c");
@@ -165,6 +173,11 @@ namespace Kartverket.ReportGenerator.Services
             foreach (var data in epsgs)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfEpsgCodes, Count = data.Value });
+
+                if (!totalCodelists.ContainsKey(data.Key))
+                    totalCodelists.Add(data.Key, 0);
+
+                totalCodelists[data.Key] = totalCodelists[data.Key] + data.Value;
             }
 
             organizationCodeList = new OrganizationCodeList();
@@ -173,11 +186,21 @@ namespace Kartverket.ReportGenerator.Services
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfCodelists, Count = data.Value.CountCodeList });
+
+                if (!totalCodelists.ContainsKey(data.Key))
+                    totalCodelists.Add(data.Key, 0);
+
+                totalCodelists[data.Key] = totalCodelists[data.Key] + data.Value.CountCodeList;
             }
 
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfCodelistValues, Count = data.Value.CountCodeListValues });
+
+                if (!totalCodelistValues.ContainsKey(data.Key))
+                    totalCodelistValues.Add(data.Key, 0);
+
+                totalCodelistValues[data.Key] = totalCodelistValues[data.Key] + data.Value.CountCodeListValues;
             }
 
             organizationCodeList = new OrganizationCodeList();
@@ -186,11 +209,21 @@ namespace Kartverket.ReportGenerator.Services
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfMetadataCodelists, Count = data.Value.CountCodeList });
+
+                if (!totalCodelists.ContainsKey(data.Key))
+                    totalCodelists.Add(data.Key, 0);
+
+                totalCodelists[data.Key] = totalCodelists[data.Key] + data.Value.CountCodeList;
             }
 
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfMetadataCodelistValues, Count = data.Value.CountCodeListValues });
+
+                if (!totalCodelistValues.ContainsKey(data.Key))
+                    totalCodelistValues.Add(data.Key, 0);
+
+                totalCodelistValues[data.Key] = totalCodelistValues[data.Key] + data.Value.CountCodeListValues;
             }
 
             organizationCodeList = new OrganizationCodeList();
@@ -199,12 +232,34 @@ namespace Kartverket.ReportGenerator.Services
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfSosiCodelist, Count = data.Value.CountCodeList });
+
+                if (!totalCodelists.ContainsKey(data.Key))
+                    totalCodelists.Add(data.Key, 0);
+
+                totalCodelists[data.Key] = totalCodelists[data.Key] + data.Value.CountCodeList;
             }
 
             foreach (var data in organizationCodeList.Organizations)
             {
                 codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfSosiCodelistValues, Count = data.Value.CountCodeListValues });
+
+                if (!totalCodelistValues.ContainsKey(data.Key))
+                    totalCodelistValues.Add(data.Key, 0);
+
+                totalCodelistValues[data.Key] = totalCodelistValues[data.Key] + data.Value.CountCodeListValues;
             }
+
+
+            foreach(var data in totalCodelists)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfTotalCodelist, Count = data.Value });
+            }
+
+            foreach (var data in totalCodelistValues)
+            {
+                codelists.Add(new Statistics { Organization = data.Key, Measurement = Measurement.NumberOfTotalCodelistValues, Count = data.Value });
+            }
+
 
             return codelists;
         }
@@ -498,6 +553,8 @@ namespace Kartverket.ReportGenerator.Services
             measurements.Add(Measurement.NumberOfMetadataCodelistValues);
             measurements.Add(Measurement.NumberOfSosiCodelist);
             measurements.Add(Measurement.NumberOfSosiCodelistValues);
+            measurements.Add(Measurement.NumberOfTotalCodelist);
+            measurements.Add(Measurement.NumberOfTotalCodelistValues);
 
             return measurements;
         }
@@ -547,8 +604,8 @@ namespace Kartverket.ReportGenerator.Services
         public const string NumberOfSosiCodelist = "Antall SOSI-kodelister i SOSI kodelisteregisteret";
         public const string NumberOfSosiCodelistValues = "Antall SOSI-kodelisteverdier i SOSI kodelisteregisteret";
 
-        //public const string NumberOfTotalCodelist = "Antall kodelister totalt i hele registeret"; //Summere opp 1)kodelister under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
-        //public const string NumberOfTotalCodelistValues = "Antall kodelisteverdier totalt i hele registeret"; //Summere opp 1)kodelisteverdier under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
+        public const string NumberOfTotalCodelist = "Antall kodelister totalt i hele registeret"; //Summere opp 1)kodelister under kodeliste, 2)metdatakodelister, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelister
+        public const string NumberOfTotalCodelistValues = "Antall kodelisteverdier totalt i hele registeret"; //Summere opp 1)kodelisteverdier under kodeliste, 2)metdatakodelisteverdier, 3)organisasjoner, 4)EPSG-koder, 5)SOSI-kodelisteverdier
     }
 
     public interface IStatisticsService
