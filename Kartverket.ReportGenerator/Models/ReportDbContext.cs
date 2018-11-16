@@ -13,5 +13,15 @@ namespace Kartverket.ReportGenerator.Models
         }
 
         public virtual DbSet<MetadataEntry> MetadataEntries { get; set; }
+        public virtual DbSet<Statistics> StatisticalData { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Statistics>().HasIndex(i => i.Date);
+            modelBuilder.Entity<Statistics>().HasIndex(i => i.Organization);
+            modelBuilder.Entity<Statistics>().HasIndex(i => i.Measurement);
+            modelBuilder.Entity<Statistics>().HasIndex(i => i.Count);
+        }
+
     }
 }
