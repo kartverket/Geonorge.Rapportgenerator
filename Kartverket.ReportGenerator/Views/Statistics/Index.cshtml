@@ -1,0 +1,114 @@
+﻿@using Kartverket.ReportApi
+@model Kartverket.ReportGenerator.Models.StatisticsReport
+@{
+    ViewBag.Title = "Innholdsstatistikk";
+}
+
+@section breadcrumb {
+    <li>@ViewBag.Title</li>
+}
+<h3>@ViewBag.Title</h3>
+<form>
+    <div class="row">
+        <div class="col-md-5">
+            <p>
+                Innhold:
+            </p>
+            <div class="custom-select">
+                <select required name="measurement" class="chosen-select form-control">
+                    @foreach (var measurement in Model.MeasurementsAvailable)
+                    {
+                        <option value="@measurement" @(measurement == Model.MeasurementSelected ? "selected" : "")>@measurement</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <p>
+                Organisasjon:
+            </p>
+            <div class="custom-select">
+                <select name="organization" class="chosen-select form-control">
+                    <option value="">Alle</option>
+                    @foreach (var organization in Model.OrganizationsAvailable)
+                    {
+                        <option value="@organization" @(organization == Model.OrganizationSelected ? "selected" : "")>@organization</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-right">
+                <p style="margin-top: 2px;">
+                    Fra dato: <input type="date" name="FromDate" value="@Model.FromDate.Value.ToString("yyyy-MM-dd")" />
+                </p>
+                <p style="margin-top: 2px;">
+                    Til dato: <input type="date" name="ToDate" value="@Model.ToDate.Value.ToString("yyyy-MM-dd")" />
+                </p>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <input type="submit" class="btn" value="Vis" />
+        </div>
+    </div>
+</form>
+<script src="~/Scripts/Chart.js"></script>
+
+<canvas id="myChart" width="400" height="190"></canvas>
+<script>
+    var dataLabels = [];
+
+    @foreach (var d in Model.ReportResult.Data.ToList())
+     {
+        foreach(var v in d.Values) {
+                        @:dataLabels.push("@Html.Raw((v.Key))");
+           }
+            }
+
+            var dataValues = [];
+            @foreach(var d in Model.ReportResult.Data.ToList())
+            {
+                foreach (var v in d.Values)
+                {
+                    @:dataValues.push("@v.Value");
+        }
+        }
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+
+            type: 'line',
+            data:
+                {
+
+                labels: dataLabels,
+                datasets: [{
+                       label: '@Html.Raw(Model.ReportResult.Data[0].Label)',
+                   data: dataValues,
+                        }]
+                },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min: @(Model.MinimumCount),
+                        max: @(Model.ReportResult.TotalDataCount),
+                        userCallback: function (label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            if (Math.floor(label) === label) {
+                                return label;
+                            }
+
+                        }
+                        }
+                }]
+            }
+        }
+            });
+</script>
+@if (ViewBag.Role == "Admin")
+{
+<p class="text-right" style="padding-top: 35px;">
+    <a href="~/Statistics/Create" class="btn">Kjør ny måling</a>
+</p>
+}
