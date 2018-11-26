@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using WebApi.BasicAuth;
 
 namespace Kartverket.ReportGenerator
 {
@@ -13,6 +14,8 @@ namespace Kartverket.ReportGenerator
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            config.EnableBasicAuth();
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
