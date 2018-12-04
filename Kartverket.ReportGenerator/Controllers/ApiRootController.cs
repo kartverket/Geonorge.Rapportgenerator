@@ -21,6 +21,8 @@ namespace Kartverket.ReportGenerator.Controllers
             _statisticsService = statisticsService;
         }
 
+        [HttpGet]
+        [HttpPost]
         [Route("api/internal/create-statistics")]
         public void Post()
         {
