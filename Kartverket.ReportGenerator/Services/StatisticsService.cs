@@ -558,6 +558,14 @@ namespace Kartverket.ReportGenerator.Services
 
             return measurements;
         }
+
+        public List<ReportMeasurement> GetReportLiveSummary(string organization)
+        {
+            var report = new List<ReportMeasurement>();
+            //Todo get live value
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = "1539" });
+            return report;
+        }
     }
 
     internal class OrganizationCodeList
@@ -612,5 +620,12 @@ namespace Kartverket.ReportGenerator.Services
     {
         void CreateReport();
         StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate);
+        List<ReportMeasurement> GetReportLiveSummary(string organization);
+    }
+
+    public class ReportMeasurement
+    {
+        public string Label { get; set; }
+        public string Value { get; set; }
     }
 }

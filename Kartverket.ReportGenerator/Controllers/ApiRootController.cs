@@ -9,7 +9,6 @@ using System.Web.Http;
 
 namespace Kartverket.ReportGenerator.Controllers
 {
-    [Authorize(Roles = AuthConfig.DatasetProviderRole)]
     public class ApiRootController : ApiController
     {
         private readonly IStatisticsService _statisticsService;
@@ -21,6 +20,23 @@ namespace Kartverket.ReportGenerator.Controllers
             _statisticsService = statisticsService;
         }
 
+        [HttpGet]
+        [Route("api/statistics")]
+        public List<ReportMeasurement> Get(string organization)
+        {
+            try
+            {
+               return _statisticsService.GetReportLiveSummary(organization);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+
+            return new List<ReportMeasurement>();
+        }
+
+        [Authorize(Roles = AuthConfig.DatasetProviderRole)]
         [HttpGet]
         [HttpPost]
         [Route("api/internal/create-statistics")]
