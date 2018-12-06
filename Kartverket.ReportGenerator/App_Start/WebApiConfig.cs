@@ -15,6 +15,8 @@ namespace Kartverket.ReportGenerator
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            config.EnableCors();
+
             config.EnableBasicAuth();
 
             config.Routes.MapHttpRoute(

@@ -2,6 +2,7 @@
 using Kartverket.ReportGenerator.Services;
 using System;
 using System.Collections.Generic;
+using System.Web.Http.Cors;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Web.Http;
 
 namespace Kartverket.ReportGenerator.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ApiRootController : ApiController
     {
         private readonly IStatisticsService _statisticsService;
