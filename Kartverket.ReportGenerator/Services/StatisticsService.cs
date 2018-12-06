@@ -563,7 +563,8 @@ namespace Kartverket.ReportGenerator.Services
         {
             var report = new List<ReportMeasurement>();
             //Todo get live value
-            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = "1539" });
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = "1657" });
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductSpesifications, Value = "34" });
             return report;
         }
     }
