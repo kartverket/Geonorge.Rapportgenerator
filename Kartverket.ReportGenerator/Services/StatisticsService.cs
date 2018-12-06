@@ -385,10 +385,13 @@ namespace Kartverket.ReportGenerator.Services
             return result;
         }
 
-        private Dictionary<string, int> GetRegisterCartographyResult()
+        private Dictionary<string, int> GetRegisterCartographyResult(string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "kartografi/api/kartografi";
+
+            if (!string.IsNullOrEmpty(organization))
+                url = url + "?owner=" + organization;
 
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
@@ -581,6 +584,9 @@ namespace Kartverket.ReportGenerator.Services
             report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = metadataTotal.FirstOrDefault().Value.ToString() });
             var metadataDataset = GetMetadataResult("dataset", organization);
             report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataForDatasetTotal, Value = metadataDataset.FirstOrDefault().Value.ToString() });
+            var cartographyResult = GetRegisterCartographyResult(organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfCartographyFiles, Value = cartographyResult.FirstOrDefault().Value.ToString() });
+
             return report;
         }
     }
