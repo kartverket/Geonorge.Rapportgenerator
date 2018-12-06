@@ -416,7 +416,7 @@ namespace Kartverket.ReportGenerator.Services
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/ApiRoot?systemid=" + systemId;
-
+            System.Diagnostics.Debug.WriteLine(url);
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             c.Headers.Remove("Accept-Language");
@@ -440,7 +440,7 @@ namespace Kartverket.ReportGenerator.Services
             return result;
         }
 
-        private Dictionary<string, int> GetMetadataResult(string type)
+        private Dictionary<string, int> GetMetadataResult(string type, string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
 
@@ -449,21 +449,36 @@ namespace Kartverket.ReportGenerator.Services
             if (!string.IsNullOrEmpty(type))
                 url = url + "?facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
 
+            if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(organization))
+                url = url + "&facets%5b1%5dname=organization&facets%5b1%5dvalue=" + organization;
+            else if (!string.IsNullOrEmpty(organization))
+                url = url + "?facets%5b0%5dname=organization&facets%5b0%5dvalue=" + organization;
+
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             c.Headers.Remove("Accept-Language");
             c.Headers.Add("Accept-Language", Culture.NorwegianCode);
             var data = c.DownloadString(url);
             var response = Newtonsoft.Json.Linq.JObject.Parse(data);
-            var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
 
-            foreach (var item in organizations)
+            if (!string.IsNullOrEmpty(organization))
             {
-                var organization = item.SelectToken("Name").ToString();
-                var count = (int) item.SelectToken("Count");
+                int organizationCount = (int) response.SelectToken("NumFound");
+                result.Add(organization, organizationCount);
+            }
+            else
+            { 
+                var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
 
-                result.Add(organization, count);
-            } 
+                foreach (var item in organizations)
+                {
+                    var organizationName = item.SelectToken("Name").ToString();
+                    var count = (int) item.SelectToken("Count");
+
+                    result.Add(organizationName, count);
+                }
+
+            }
 
             return result;
         }
@@ -562,9 +577,10 @@ namespace Kartverket.ReportGenerator.Services
         public List<ReportMeasurement> GetReportLiveSummary(string organization)
         {
             var report = new List<ReportMeasurement>();
-            //Todo get live value
-            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = "1657" });
-            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductSpesifications, Value = "34" });
+            var metadataTotal = GetMetadataResult("", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = metadataTotal.FirstOrDefault().Value.ToString() });
+            var metadataDataset = GetMetadataResult("dataset", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataForDatasetTotal, Value = metadataDataset.FirstOrDefault().Value.ToString() });
             return report;
         }
     }
