@@ -415,7 +415,7 @@ namespace Kartverket.ReportGenerator.Services
             return result;
         }
 
-        private Dictionary<string, int> GetRegisterResult(string systemId)
+        private Dictionary<string, int> GetRegisterResult(string systemId, string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/ApiRoot?systemid=" + systemId;
@@ -438,6 +438,12 @@ namespace Kartverket.ReportGenerator.Services
                 else
                     result[owner] = result[owner] + 1;
 
+            }
+
+            if (!string.IsNullOrEmpty(organization)) {
+                var resultOrganization = new Dictionary<string, int>();
+                resultOrganization[organization] = result.Where(o => o.Key == organization).FirstOrDefault().Value;
+                return resultOrganization;
             }
 
             return result;
@@ -584,6 +590,10 @@ namespace Kartverket.ReportGenerator.Services
             report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = metadataTotal.FirstOrDefault().Value.ToString() });
             var metadataDataset = GetMetadataResult("dataset", organization);
             report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataForDatasetTotal, Value = metadataDataset.FirstOrDefault().Value.ToString() });
+            var productSpesifications = GetRegisterResult("8e726684-f216-4497-91be-6ab2496a84d3", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductSpesifications, Value = productSpesifications.FirstOrDefault().Value.ToString() });
+            var productSheets = GetRegisterResult("a42bc2b3-2314-4b7e-8007-71d9b10f2c04", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductsheets, Value = productSheets.FirstOrDefault().Value.ToString() });
             var cartographyResult = GetRegisterCartographyResult(organization);
             report.Add(new ReportMeasurement { Label = Measurement.NumberOfCartographyFiles, Value = cartographyResult.FirstOrDefault().Value.ToString() });
 
