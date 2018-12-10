@@ -385,10 +385,13 @@ namespace Kartverket.ReportGenerator.Services
             return result;
         }
 
-        private Dictionary<string, int> GetRegisterCartographyResult()
+        private Dictionary<string, int> GetRegisterCartographyResult(string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "kartografi/api/kartografi";
+
+            if (!string.IsNullOrEmpty(organization))
+                url = url + "?owner=" + organization;
 
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
@@ -412,11 +415,11 @@ namespace Kartverket.ReportGenerator.Services
             return result;
         }
 
-        private Dictionary<string, int> GetRegisterResult(string systemId)
+        private Dictionary<string, int> GetRegisterResult(string systemId, string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
             var url = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/ApiRoot?systemid=" + systemId;
-
+            System.Diagnostics.Debug.WriteLine(url);
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             c.Headers.Remove("Accept-Language");
@@ -437,10 +440,16 @@ namespace Kartverket.ReportGenerator.Services
 
             }
 
+            if (!string.IsNullOrEmpty(organization)) {
+                var resultOrganization = new Dictionary<string, int>();
+                resultOrganization[organization] = result.Where(o => o.Key == organization).FirstOrDefault().Value;
+                return resultOrganization;
+            }
+
             return result;
         }
 
-        private Dictionary<string, int> GetMetadataResult(string type)
+        private Dictionary<string, int> GetMetadataResult(string type, string organization = null)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
 
@@ -449,21 +458,36 @@ namespace Kartverket.ReportGenerator.Services
             if (!string.IsNullOrEmpty(type))
                 url = url + "?facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
 
+            if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(organization))
+                url = url + "&facets%5b1%5dname=organization&facets%5b1%5dvalue=" + organization;
+            else if (!string.IsNullOrEmpty(organization))
+                url = url + "?facets%5b0%5dname=organization&facets%5b0%5dvalue=" + organization;
+
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
             c.Headers.Remove("Accept-Language");
             c.Headers.Add("Accept-Language", Culture.NorwegianCode);
             var data = c.DownloadString(url);
             var response = Newtonsoft.Json.Linq.JObject.Parse(data);
-            var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
 
-            foreach (var item in organizations)
+            if (!string.IsNullOrEmpty(organization))
             {
-                var organization = item.SelectToken("Name").ToString();
-                var count = (int) item.SelectToken("Count");
+                int organizationCount = (int) response.SelectToken("NumFound");
+                result.Add(organization, organizationCount);
+            }
+            else
+            { 
+                var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
 
-                result.Add(organization, count);
-            } 
+                foreach (var item in organizations)
+                {
+                    var organizationName = item.SelectToken("Name").ToString();
+                    var count = (int) item.SelectToken("Count");
+
+                    result.Add(organizationName, count);
+                }
+
+            }
 
             return result;
         }
@@ -558,6 +582,23 @@ namespace Kartverket.ReportGenerator.Services
 
             return measurements;
         }
+
+        public List<ReportMeasurement> GetReportLiveSummary(string organization)
+        {
+            var report = new List<ReportMeasurement>();
+            var metadataTotal = GetMetadataResult("", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataTotal, Value = metadataTotal.FirstOrDefault().Value.ToString() });
+            var metadataDataset = GetMetadataResult("dataset", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfMetadataForDatasetTotal, Value = metadataDataset.FirstOrDefault().Value.ToString() });
+            var productSpesifications = GetRegisterResult("8e726684-f216-4497-91be-6ab2496a84d3", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductSpesifications, Value = productSpesifications.FirstOrDefault().Value.ToString() });
+            var productSheets = GetRegisterResult("a42bc2b3-2314-4b7e-8007-71d9b10f2c04", organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfProductsheets, Value = productSheets.FirstOrDefault().Value.ToString() });
+            var cartographyResult = GetRegisterCartographyResult(organization);
+            report.Add(new ReportMeasurement { Label = Measurement.NumberOfCartographyFiles, Value = cartographyResult.FirstOrDefault().Value.ToString() });
+
+            return report;
+        }
     }
 
     internal class OrganizationCodeList
@@ -612,5 +653,12 @@ namespace Kartverket.ReportGenerator.Services
     {
         void CreateReport();
         StatisticsReport GetReport(string measurement, string organization, DateTime? fromDate, DateTime? toDate);
+        List<ReportMeasurement> GetReportLiveSummary(string organization);
+    }
+
+    public class ReportMeasurement
+    {
+        public string Label { get; set; }
+        public string Value { get; set; }
     }
 }
