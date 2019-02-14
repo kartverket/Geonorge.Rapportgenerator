@@ -36,7 +36,7 @@ namespace Kartverket.ReportGenerator.Services
             }
 
             if (uuid == "638b5ee7-6ab0-4a27-a71a-716bb3a4541d")
-                return "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighetfriluft?service=WFS&request=GetCapabilities";
+                return "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_friluft?service=WFS&request=GetCapabilities";
             else if(uuid == "9c075b5d-1fb5-414e-aaf5-c6390db896d1")
                 return "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted?service=WFS&request=GetCapabilities";
 
