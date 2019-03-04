@@ -215,12 +215,17 @@
     function loadWfs() {
         $.ajax({
             headers: {
-                Accept: "application/rdf+xml",
-                "Content-Type": "text/plain; charset=utf-8"
+                Accept: "text/xml",
+                "Content-Type": "text/xml; charset=utf-8"
             },
             type: "GET",
+            dataType: 'text',
             url: "@Html.Raw(queryUrl.Replace("å", "%C3%A5").Replace("Å", "%C3%85").Replace("æ", "%C3%A6").Replace("Æ", "%C3%86").Replace("ø", "%C3%B8").Replace("Ø", "%C3%98"))",
-            success: setWfs
+            success: setWfs,
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr);
+                console.log(thrownError);
+            } 
         });
     }
 
