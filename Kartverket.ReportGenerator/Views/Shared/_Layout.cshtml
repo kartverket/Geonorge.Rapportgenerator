@@ -48,8 +48,8 @@
     }
     <script>
         searchOption.supportsLogin = true;
-        searchOption.loginUrl = '@Html.Raw(Url.Action("SignIn", "AuthServices", new { ReturnUrl = Request.Url }))';
-        searchOption.logoutUrl = '@Html.Raw(Url.Action("LogOut", "AuthServices"))';
+        searchOption.loginUrl = '@Html.Raw(Url.Action("SignIn", "Report", new { ReturnUrl = Request.Url }))';
+        searchOption.logoutUrl = '@Html.Raw(Url.Action("SignOut", "Report"))';
         searchOption.loggedIn = @Request.IsAuthenticated.ToString().ToLower();
         searchOption.epiBaseUrl = '@Html.GeonorgeUrl()';
         var orderItems = Cookies.get('orderitems');
