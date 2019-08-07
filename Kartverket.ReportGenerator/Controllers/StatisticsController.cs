@@ -1,11 +1,17 @@
-﻿using Kartverket.ReportGenerator.Models;
+﻿using Geonorge.AuthLib.Common;
+using Kartverket.ReportGenerator.Models;
 using Kartverket.ReportGenerator.Models.Translations;
 using Kartverket.ReportGenerator.Services;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace Kartverket.ReportGenerator.Controllers
@@ -27,9 +33,7 @@ namespace Kartverket.ReportGenerator.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-
-                string role = GetSecurityClaim("role");
-                if (!string.IsNullOrWhiteSpace(role) && role.Equals("nd.metadata_admin"))
+                if (IsAdmin())
                 {
                     ViewBag.Role = "Admin";
                 }
@@ -64,8 +68,7 @@ namespace Kartverket.ReportGenerator.Controllers
             if (User.Identity.IsAuthenticated)
             {
 
-                string role = GetSecurityClaim("role");
-                if (string.IsNullOrWhiteSpace(role) && !role.Equals("nd.metadata_admin"))
+                if (!IsAdmin())
                 {
                     return new HttpUnauthorizedResult();
                 }
@@ -85,25 +88,34 @@ namespace Kartverket.ReportGenerator.Controllers
             return RedirectToAction("Index");
         }
 
-        private string GetSecurityClaim(string type)
+        private bool IsAdmin()
         {
-            string result = null;
-            foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
-            {
-                if (claim.Type == type && !string.IsNullOrWhiteSpace(claim.Value))
-                {
-                    result = claim.Value;
-                    break;
-                }
-            }
+            return ClaimsPrincipal.Current.IsInRole(GeonorgeRoles.MetadataAdmin);
+        }
 
-            // bad hack, must fix BAAT
-            if (!string.IsNullOrWhiteSpace(result) && type.Equals("organization") && result.Equals("Statens kartverk"))
-            {
-                result = "Kartverket";
-            }
+        public void SignIn()
+        {
+            var redirectUrl = Url.Action(nameof(ReportController.Index), "Report");
+            HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUrl },
+                OpenIdConnectAuthenticationDefaults.AuthenticationType);
+        }
 
-            return result;
+        public void SignOut()
+        {
+            var redirectUri = WebConfigurationManager.AppSettings["GeoID:PostLogoutRedirectUri"];
+            HttpContext.GetOwinContext().Authentication.SignOut(
+                new AuthenticationProperties { RedirectUri = redirectUri },
+                OpenIdConnectAuthenticationDefaults.AuthenticationType,
+                CookieAuthenticationDefaults.AuthenticationType);
+        }
+
+        /// <summary>
+        /// This is the action responding to /signout-callback-oidc route after logout at the identity provider
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SignOutCallback()
+        {
+            return RedirectToAction(nameof(ReportController.Index), "Report");
         }
 
     }
