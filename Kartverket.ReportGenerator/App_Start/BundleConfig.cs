@@ -14,7 +14,7 @@ namespace Kartverket.ReportGenerator
                 "~/Content/bower_components/kartverket-felleskomponenter/assets/css/main.min.css"
             ));
 
-            bundles.Add(new StyleBundle("~/shared-partials-styles").Include(
+            bundles.Add(new StyleBundle("~/Content/shared-partials-styles").Include(
                "~/dist/vendor.css",
                "~/dist/main.css"
                ));
@@ -24,11 +24,12 @@ namespace Kartverket.ReportGenerator
                "~/Content/bower_components/kartverket-felleskomponenter/assets/js/main.js"
            ));
 
-            bundles.Add(new ScriptBundle("~/shared-partials-scripts").Include(
+            bundles.Add(new ScriptBundle("~/Content/shared-partials-scripts").Include(
                "~/dist/vendor.js",
                "~/dist/main.js"
 
            ));
+            BundleTable.EnableOptimizations = true;
         }
     }
 }
