@@ -16,14 +16,14 @@
             currentCulture: '@CultureHelper.GetCurrentCulture()'
         };
     </script>
-    @Scripts.Render("~/shared-partials-scripts")
+    @Scripts.Render("~/Content/shared-partials-scripts")
 </head>
 <body class="geonorge-container prototype geonorge">
 
     <div id="loading-animation" class="loading-animation" style="display: none;"></div>
 
     @Html.Raw(File.ReadAllText(Server.MapPath("~/dist/partials/Header.html")))
-    @Styles.Render("~/shared-partials-styles")
+    @Styles.Render("~/Content/shared-partials-styles")
     @Styles.Render("~/Content/bower_components/kartverket-felleskomponenter/assets/css/styles")
 
     <div class="container container-breadcrumbs" id="navTabCont">
