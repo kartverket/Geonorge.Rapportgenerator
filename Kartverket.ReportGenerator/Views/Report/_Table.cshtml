@@ -86,7 +86,7 @@
             </div>
             <div class="col-md-1">
                 @{
-                    var status = "N/A";
+                    string status;
 
                     switch (data.Values[4].Value)
                     {
@@ -96,7 +96,7 @@
                         case "draft":
                             status = "I prosess";
                             break;
-                        case null:
+                        default:
                             status = "Ikke startet";
                             break;
                     }

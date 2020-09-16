@@ -133,10 +133,8 @@ namespace Kartverket.ReportGenerator.Services
                     return "Utført";
                 case "draft":
                     return "I prosess";
-                case null:
-                    return "Ikke startet";
                 default:
-                    return "N/A";
+                    return "Ikke startet";
             }
         }
 
