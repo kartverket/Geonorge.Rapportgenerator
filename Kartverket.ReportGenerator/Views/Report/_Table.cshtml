@@ -1,7 +1,6 @@
-﻿@using Kartverket.ReportApi
-@model Kartverket.ReportApi.ReportResult
+﻿@model Kartverket.ReportApi.ReportResult
 <div id="tebleView" class="search-results">
- 
+
     <div class="row search-results-table-heading">
         <div class="col-md-2">
             Område
@@ -9,28 +8,28 @@
         <div class="col-md-2">
             Data
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             Spørring
         </div>
         <div class="col-md-1">
-        @if (ViewBag.query.Value == "register-DOK-coverage")
-        {
-        <span>Dekning</span>
-        }
-        else
-        {
-            <span>Antall</span>
-        }
+            @if (ViewBag.query.Value == "register-DOK-coverage")
+            {
+                <span>Dekning</span>
+            }
+            else
+            {
+                <span>Antall</span>
+            }
         </div>
         <div class="col-md-1">
-        @if (ViewBag.query.Value == "register-DOK-coverage")
-        {
-            <span>Valgt</span>
-        }
-        else
-        {
-            <span>Tillegg</span>
-        }
+            @if (ViewBag.query.Value == "register-DOK-coverage")
+            {
+                <span>Valgt</span>
+            }
+            else
+            {
+                <span>Tillegg</span>
+            }
         </div>
         <div class="col-md-1">
             Totalt
@@ -38,50 +37,73 @@
         <div class="col-md-1">
             % av totalt
         </div>
-        <div class="col-md-1">
         @if (ViewBag.query.Value == "register-DOK-selectedAndAdditional")
         {
-        <span>Bekreftet</span>
+            <div class="col-md-1">
+                Oppdatert
+            </div>
+            <div class="col-md-1">
+                Status
+            </div>
         }
-        </div>
     </div>
     <div class="menu-separator search-results-table-heading"></div>
     @foreach (var data in Model.Data.ToList())
-    {      
-    <div class="row">
-        <div class="col-md-2">
-            @data.Label
+    {
+        <div class="row">
+            <div class="col-md-2">
+                @data.Label
+            </div>
+            <div class="col-md-2">
+                @data.Values[0].Key
+            </div>
+            <div class="col-md-2">
+                @ViewBag.query.Name
+            </div>
+            <div class="col-md-1">
+                @data.Values[0].Value
+            </div>
+            <div class="col-md-1">
+                @data.Values[1].Value
+            </div>
+            <div class="col-md-1">
+                @if (data.TotalDataCount > 0)
+                {
+                    @data.TotalDataCount
+                }
+            </div>
+            <div class="col-md-1">
+                @if (data.TotalDataCount > 0)
+                {
+                    @Math.Truncate(Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount * 100)
+                }
+            </div>
+            <div class="col-md-1">
+                @if (data.Values.Count > 2 && data.Values[2].Key == "Bekreftet")
+                {
+                    @data.Values[2].Value
+                }
+            </div>
+            <div class="col-md-1">
+                @{
+                    string status;
+
+                    switch (data.Values[4].Value)
+                    {
+                        case "valid":
+                            status = "Utført";
+                            break;
+                        case "draft":
+                            status = "I prosess";
+                            break;
+                        default:
+                            status = "Ikke startet";
+                            break;
+                    }
+                }
+
+                @status
+            </div>
         </div>
-        <div class="col-md-2">
-            @data.Values[0].Key
-        </div>
-        <div class="col-md-3">
-            @ViewBag.query.Name
-        </div>
-        <div class="col-md-1">
-            @data.Values[0].Value
-        </div>
-        <div class="col-md-1">
-            @data.Values[1].Value
-        </div>
-        <div class="col-md-1">
-            @if (data.TotalDataCount > 0)
-            {
-                @data.TotalDataCount 
-            }
-        </div>
-        <div class="col-md-1">
-            @if(data.TotalDataCount > 0)
-            {
-            @(Math.Truncate((Convert.ToDecimal(data.Values[0].Value) / data.TotalDataCount) * 100))
-            }
-        </div>
-        <div class="col-md-1">
-            @if(data.Values.Count > 2 && data.Values[2].Key == "Bekreftet")
-            {
-            @data.Values[2].Value
-            }
-        </div>
-    </div>
     }
 </div>
