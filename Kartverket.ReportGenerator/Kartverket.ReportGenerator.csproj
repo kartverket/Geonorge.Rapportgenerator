@@ -535,7 +535,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Content\bower_components\kartverket-felleskomponenter\.bower.json" />
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\fonts\702ZOKiLJc3WVjuplzInF5uFdDttMLvmWuJdhhgs.ttf" />
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\fonts\fontawesome-webfont.ttf" />
@@ -560,10 +559,6 @@
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\partials\_Footer.min.cshtml" />
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\partials\_Footer_eng.cshtml" />
     <Content Include="Content\bower_components\kartverket-felleskomponenter\assets\partials\_Footer_eng.min.cshtml" />
-    <Content Include="Content\bower_components\kartverket-felleskomponenter\bower.json" />
-    <Content Include="Content\bower_components\kartverket-felleskomponenter\package-lock.json" />
-    <Content Include="Content\bower_components\kartverket-felleskomponenter\README.md" />
-    <Content Include="Content\bower_components\kartverket-felleskomponenter\yarn.lock" />
     <Content Include="dist\maps\main.css.map" />
     <Content Include="dist\maps\main.js.map" />
     <Content Include="dist\maps\vendor.css.map" />
