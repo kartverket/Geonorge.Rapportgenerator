@@ -63,7 +63,7 @@ namespace Kartverket.ReportGenerator.Services
                 if (data.Values.Count > 2 && data.Values[2].Key == "Bekreftet")
                     AddContent(data.Values[2].Value);
 
-                if (data.Values.Count > 2 && data.Values[4].Key == "Status")
+                if (data.Values.Count > 4 && (data.Values[4].Key == "Status" || data.Values[4].Key == "DOKStatus"))
                     AddContent(GetDOKStatus(data.Values[4].Value));
             }
         }
