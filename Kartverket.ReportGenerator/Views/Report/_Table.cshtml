@@ -86,19 +86,20 @@
             </div>
             <div class="col-md-1">
                 @{
-                    string status;
-
-                    switch (data.Values[4].Value)
-                    {
-                        case "valid":
-                            status = "Utført";
-                            break;
-                        case "draft":
-                            status = "I prosess";
-                            break;
-                        default:
-                            status = "Ikke startet";
-                            break;
+                    string status = "";
+                    if(data.Values.Count() > 4) {
+                        switch (data.Values[4].Value)
+                        {
+                            case "valid":
+                                status = "Utført";
+                                break;
+                            case "draft":
+                                status = "I prosess";
+                                break;
+                            default:
+                                status = "Ikke startet";
+                                break;
+                        }
                     }
                 }
 
