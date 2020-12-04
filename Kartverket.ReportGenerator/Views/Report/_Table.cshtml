@@ -31,12 +31,15 @@
                 <span>Tillegg</span>
             }
         </div>
+         @if (ViewBag.query.Value != "register-DOK-coverage")
+         {
         <div class="col-md-1">
             Totalt
         </div>
         <div class="col-md-1">
             % av totalt
         </div>
+         }
         @if (ViewBag.query.Value == "register-DOK-selectedAndAdditional")
         {
             <div class="col-md-1">
