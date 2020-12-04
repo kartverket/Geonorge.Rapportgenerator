@@ -102,8 +102,10 @@ namespace Kartverket.ReportGenerator.Services
             else
                 AddContent("Tillegg");
 
-            AddContent("Totalt");
-            AddContent("% av totalt");
+            if (reportQuery.QueryName != "register-DOK-coverage") { 
+                AddContent("Totalt");
+                AddContent("% av totalt");
+            }
 
             if (reportQuery.QueryName == "register-DOK-selectedAndAdditional")
             {
