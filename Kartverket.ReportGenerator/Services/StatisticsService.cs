@@ -453,15 +453,15 @@ namespace Kartverket.ReportGenerator.Services
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
 
-            var url = WebConfigurationManager.AppSettings["KartkatalogenUrl"] + "api/search";
+            var url = WebConfigurationManager.AppSettings["KartkatalogenUrl"] + "api/search?listhidden=true";
 
             if (!string.IsNullOrEmpty(type))
-                url = url + "?facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
+                url = url + "&facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
 
             if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(organization))
                 url = url + "&facets%5b1%5dname=organization&facets%5b1%5dvalue=" + organization;
             else if (!string.IsNullOrEmpty(organization))
-                url = url + "?facets%5b0%5dname=organization&facets%5b0%5dvalue=" + organization;
+                url = url + "&facets%5b0%5dname=organization&facets%5b0%5dvalue=" + organization;
 
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
