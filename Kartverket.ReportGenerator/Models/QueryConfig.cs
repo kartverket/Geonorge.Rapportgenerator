@@ -36,7 +36,7 @@ namespace Kartverket.ReportGenerator.Models
                 new Query
                 {
                     Data = DOK,
-                    Value = "register-DOK-selectedMeasure",
+                    Value = "register-DOK-selectedSuitability",
                     Name = "Antall DOK-datasett med valgt egnethetsvurdering",
                     QueryUrl = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/report"
                 }
