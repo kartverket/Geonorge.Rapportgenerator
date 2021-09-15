@@ -26,7 +26,7 @@
             {
                 <span>Valgt</span>
             }
-            else
+            else if (ViewBag.query.Value != "register-DOK-selectedMeasure")
             {
                 <span>Tillegg</span>
             }
@@ -67,7 +67,9 @@
                 @data.Values[0].Value
             </div>
             <div class="col-md-1">
+                @if(data.Values.Count > 1) { 
                 @data.Values[1].Value
+                }
             </div>
             <div class="col-md-1">
                 @if (data.TotalDataCount > 0)

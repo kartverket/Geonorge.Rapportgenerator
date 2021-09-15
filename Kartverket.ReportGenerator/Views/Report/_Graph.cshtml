@@ -18,6 +18,10 @@
         label1 = "Antall DOK-datasett valgt";
         label2 = "Antall tilleggsdataset valgt";
     }
+    else if (label1 == "register-DOK-selectedMeasure")
+    {
+        label1 = "Antall DOK-datasett med valgt egnethetsvurdering";
+    }
     else if (label1 == "register-DOK-selectedTheme")
     {
         label1 = "Antall kommuner på landsbasis som har valgt datasettet";
@@ -53,7 +57,9 @@
     var dataValues2 = [];
     @foreach (var d in Model.Data.ToList())
     {
+      if(d.Values.Count > 1) { 
       @:dataValues2.push("@d.Values[1].Value");
+      }
     }
 
 
