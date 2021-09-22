@@ -49,9 +49,9 @@ namespace Kartverket.ReportGenerator.Services
                 else
                     AddContent(data.Values[0].Value);
 
-                if (!string.IsNullOrEmpty(data.Values[1].Value) && IsNumeric(data.Values[1].Value))
+                if (data.Values.Count > 1 && !string.IsNullOrEmpty(data.Values[1].Value) && IsNumeric(data.Values[1].Value))
                     AddContent(Convert.ToInt16(data.Values[1].Value), "0");
-                else
+                else if(data.Values.Count > 1)
                     AddContent(data.Values[1].Value);
 
                 if (data.TotalDataCount > 0)
@@ -99,7 +99,7 @@ namespace Kartverket.ReportGenerator.Services
                 AddContent("Antall");
             if (reportQuery.QueryName == "register-DOK-coverage")
                 AddContent("Valgt");
-            else
+            else if (reportQuery.QueryName != "register-DOK-selectedSuitability")
                 AddContent("Tillegg");
 
             if (reportQuery.QueryName != "register-DOK-coverage") { 

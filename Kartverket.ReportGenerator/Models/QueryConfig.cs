@@ -31,6 +31,17 @@ namespace Kartverket.ReportGenerator.Models
                     QueryUrl = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/report"
                 }
             );
+
+            queries.Add(
+                new Query
+                {
+                    Data = DOK,
+                    Value = "register-DOK-selectedSuitability",
+                    Name = "Antall DOK-datasett med valgt egnethetsvurdering",
+                    QueryUrl = WebConfigurationManager.AppSettings["RegistryUrl"] + "api/report"
+                }
+            );
+
             queries.Add(
                 new Query
                 {
