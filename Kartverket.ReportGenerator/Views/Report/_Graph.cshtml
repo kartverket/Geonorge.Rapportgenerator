@@ -93,7 +93,7 @@
                     stacked: true,
                     ticks: {
                         min: 0,
-                        max: @(Model.Data?[0]?.TotalDataCount),
+                        max: @((Model.Data != null && Model.Data.Count > 0) ?  Model.Data[0].TotalDataCount : 0),
                         }
                 }]
             }
