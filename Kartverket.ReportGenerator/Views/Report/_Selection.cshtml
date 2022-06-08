@@ -5,10 +5,10 @@
 <div class="row">
     <div class="col-md-3">
         <p>
-            Velg område:
+            <label for="areas-select">Velg område:</label>
         </p>
         <div class="custom-select">
-            <select required data-placeholder="Klikk for å velge område" name="areas" class="chosen-select form-control selectOmraader">
+            <select id="areas-select" required data-placeholder="Klikk for å velge område" name="areas" class="chosen-select form-control selectOmraader">
                 <option></option>
                 <option @(((IList<string>)ViewBag.selectedAreas).Contains("Hele landet") ? "selected" : "")>Hele landet</option>
                 <optgroup label="Fylke">
@@ -28,7 +28,7 @@
     </div>
     <div class="col-md-3">
         <p>
-            Velg data:
+            <label for="data">Velg data:</label>
         </p>
         <div class="custom-select">
             <select required data-placeholder="Klikk for å velge data" class="chosen-select form-control" id="data" name="data" onchange="getQueries();">
@@ -37,7 +37,7 @@
     </div>
     <div class="col-md-4">        
         <p>
-            Velg spørring:
+            <label for="query">Velg spørring:</label>
         </p>
         <div class="custom-select">
             <select required name="query" id="query" class="chosen-select form-control" data-placeholder="Klikk for å velge spørring">
