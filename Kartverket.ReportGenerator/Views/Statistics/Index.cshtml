@@ -12,10 +12,10 @@
     <div class="row">
         <div class="col-md-5">
             <p>
-                Innhold:
+                <label for="measurement">Innhold:</label>
             </p>
             <div class="custom-select">
-                <select required name="measurement" class="chosen-select form-control">
+                <select id="measurement" required name="measurement" class="chosen-select form-control">
                     @foreach (var measurement in Model.MeasurementsAvailable)
                     {
                         <option value="@measurement" @(measurement == Model.MeasurementSelected ? "selected" : "")>@measurement</option>
@@ -25,10 +25,10 @@
         </div>
         <div class="col-md-3">
             <p>
-                Organisasjon:
+                <label for="organization">Organisasjon:</label>
             </p>
             <div class="custom-select">
-                <select name="organization" class="chosen-select form-control">
+                <select id="organization" name="organization" class="chosen-select form-control">
                     <option value="">Alle</option>
                     @foreach (var organization in Model.OrganizationsAvailable)
                     {
@@ -40,10 +40,10 @@
         <div class="col-md-3">
             <div class="text-right">
                 <p style="margin-top: 2px;">
-                    Fra dato: <input type="date" name="FromDate" value="@Model.FromDate.Value.ToString("yyyy-MM-dd")" />
+                    <label for="FromDate">Fra dato:</label> <input type="date" id="FromDate" name="FromDate" value="@Model.FromDate.Value.ToString("yyyy-MM-dd")" />
                 </p>
                 <p style="margin-top: 2px;">
-                    Til dato: <input type="date" name="ToDate" value="@Model.ToDate.Value.ToString("yyyy-MM-dd")" />
+                    <label for="ToDate">Til dato:</label> <input type="date" id="ToDate" name="ToDate" value="@Model.ToDate.Value.ToString("yyyy-MM-dd")" />
                 </p>
             </div>
         </div>
