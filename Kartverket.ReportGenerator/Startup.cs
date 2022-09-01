@@ -24,11 +24,6 @@ namespace Kartverket.ReportGenerator
             app.UseAutofacMiddleware(container);
             app.UseAutofacMvc();  // requires Autofac.Mvc5.Owin nuget package installed
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                CookieManager = new SystemWebCookieManager()
-            });
-
             app.UseGeonorgeAuthentication();
         }
     }
