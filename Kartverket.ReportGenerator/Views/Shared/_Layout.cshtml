@@ -16,7 +16,6 @@
             currentCulture: '@CultureHelper.GetCurrentCulture()'
         };
     </script>
-    @Scripts.Render("~/Content/shared-partials-scripts")
     <link rel="stylesheet" href="/Content/site.css" />
 </head>
 <body class="geonorge-container prototype geonorge fixed-menu-margin">
@@ -47,23 +46,8 @@
         </div>
     </div>
     <geonorge-footer language="@CultureHelper.GetCurrentCulture()" version="@Html.ApplicationVersionNumber()" environment="@Html.EnvironmentName()" />
-    <script>
-        searchOption.supportsLogin = true;
-        searchOption.loginUrl = '@Html.Raw(Url.Action("SignIn", "Report", new { ReturnUrl = Request.Url }))';
-        searchOption.logoutUrl = '@Html.Raw(Url.Action("SignOut", "Report"))';
-        searchOption.loggedIn = @Request.IsAuthenticated.ToString().ToLower();
-        searchOption.epiBaseUrl = '@Html.GeonorgeUrl()';
-        var orderItems = Cookies.get('orderitems');
-        if (orderItems && orderItems > 0) {
-            $('.downloads__count').show();
-            $('.downloads__count').text(orderItems);
-        }
-    </script>
-    @Scripts.Render("~/Content/bower_components/kartverket-felleskomponenter/assets/js/scripts")
+    <script>var environmentIsProduction = @(Html.EnvironmentName() == "" ? "true" : "false");</script>
     @RenderPage("~/Content/bower_components/kartverket-felleskomponenter/assets/partials/_Analytics.min.cshtml")
-
+    @Scripts.Render("~/node-modules/scripts")
     @RenderSection("scripts", required: false)
-    <script src="https://cdn.jsdelivr.net/npm/@("@kartverket/geonorge-web-components@0.2.6/MainNavigation.js")"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@("@kartverket/geonorge-web-components@0.2.6/GeonorgeFooter.js")"></script>
-</body>
 </html>
