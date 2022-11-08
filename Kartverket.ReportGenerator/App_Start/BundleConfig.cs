@@ -21,7 +21,8 @@ namespace Kartverket.ReportGenerator
 
             bundles.Add(new ScriptBundle("~/node-modules/scripts").Include(
                "~/node_modules/@kartverket/geonorge-web-components/MainNavigation.js",
-               "~/node_modules/@kartverket/geonorge-web-components/GeoNorgeFooter.js"
+               "~/node_modules/@kartverket/geonorge-web-components/GeoNorgeFooter.js",
+               "~/node_modules/jquery/dist/jquery.js"
                ));
         }
     }

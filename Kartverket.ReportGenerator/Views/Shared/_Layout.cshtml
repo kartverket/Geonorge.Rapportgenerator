@@ -16,6 +16,7 @@
             currentCulture: '@CultureHelper.GetCurrentCulture()'
         };
     </script>
+    @Scripts.Render("~/node-modules/scripts")
     <link rel="stylesheet" href="/Content/site.css" />
 </head>
 <body class="geonorge-container prototype geonorge fixed-menu-margin">
@@ -48,6 +49,5 @@
     <geonorge-footer language="@CultureHelper.GetCurrentCulture()" version="@Html.ApplicationVersionNumber()" environment="@Html.EnvironmentName()" />
     <script>var environmentIsProduction = @(Html.EnvironmentName() == "" ? "true" : "false");</script>
     @RenderPage("~/Content/bower_components/kartverket-felleskomponenter/assets/partials/_Analytics.min.cshtml")
-    @Scripts.Render("~/node-modules/scripts")
     @RenderSection("scripts", required: false)
 </html>
