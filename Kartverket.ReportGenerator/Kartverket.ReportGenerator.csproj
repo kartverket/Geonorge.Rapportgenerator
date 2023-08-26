@@ -80,6 +80,9 @@
     <Reference Include="Geonorge.AuthLib.NetFull, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Geonorge.AuthLib.NetFull.1.0.59\lib\net472\Geonorge.AuthLib.NetFull.dll</HintPath>
     </Reference>
+    <Reference Include="Kartverket.ReportApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kartverket.ReportApi.13.8.313\lib\net472\Kartverket.ReportApi.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
     </Reference>
@@ -648,12 +651,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Kartverket.ReportApi\Kartverket.ReportApi.csproj">
-      <Project>{a5b650b8-98dc-4671-8856-b87440a1892a}</Project>
-      <Name>Kartverket.ReportApi</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
