@@ -92,7 +92,7 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        min: @(Model.MinimumCount - 1),
+                        min: @(Model.MinimumCount > 0 ? Model.MinimumCount - 1 : Model.MinimumCount),
                         max: @(Model.ReportResult.TotalDataCount),
                         userCallback: function (label, index, labels) {
                             // when the floored value is the same as the value we have a whole number
