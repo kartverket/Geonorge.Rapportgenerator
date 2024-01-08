@@ -15,13 +15,13 @@ namespace Kartverket.ReportGenerator.Services
 
         public Dictionary<string, string> GetFylker()
         {
-            return GetCodeList("d96bcbd6-d6ce-4fd4-a999-102051685aec");
+            return GetCodeList("152ee358-ce3d-40f7-b7ee-85195b40a35a");
 
         }
 
         public Dictionary<string, string> GetKommuner()
         {
-            return GetCodeList("85d75e07-7caa-4876-b0b1-27513ce57670");
+            return GetCodeList("f99d6d80-32e1-4935-8464-601d90741443");
         }
 
 
@@ -41,12 +41,12 @@ namespace Kartverket.ReportGenerator.Services
                 var codevalue = code["codevalue"].ToString();
                 var label = code["description"].ToString();
                 var status = code["status"].ToString();
-                if (status == "Utgått")
+                if (status == "Tilbaketrukket")
                     label = label + " (utgått)";
                 else if (status == "Sendt inn")
                     label = label + " (ny)";
 
-                if (!CodeValues.ContainsKey(codevalue))
+                if (status != "Tilbaketrukket" && !CodeValues.ContainsKey(codevalue))
                 {
                     CodeValues.Add(codevalue, label);
                 }
