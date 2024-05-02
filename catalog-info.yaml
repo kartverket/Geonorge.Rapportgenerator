@@ -1,0 +1,38 @@
+# nonk8s
+apiVersion: "backstage.io/v1alpha1"
+kind: "Component"
+metadata:
+  name: "Geonorge.Rapportgenerator"
+  tags:
+  - "public"
+spec:
+  type: "website"
+  lifecycle: "production"
+  owner: "datadeling_og_distribusjon"
+  system: "geonorge"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Group"
+metadata:
+  name: "security_champion_Geonorge.Rapportgenerator"
+  title: "Security Champion Geonorge.Rapportgenerator"
+spec:
+  type: "security_champion"
+  parent: "land_security_champions"
+  members:
+  - "dagolav"
+  children:
+  - "resource:Geonorge.Rapportgenerator"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Resource"
+metadata:
+  name: "Geonorge.Rapportgenerator"
+  links:
+  - url: "https://github.com/kartverket/Geonorge.Rapportgenerator"
+    title: "Geonorge.Rapportgenerator på GitHub"
+spec:
+  type: "repo"
+  owner: "security_champion_Geonorge.Rapportgenerator"
+  dependencyOf:
+  - "component:Geonorge.Rapportgenerator"
