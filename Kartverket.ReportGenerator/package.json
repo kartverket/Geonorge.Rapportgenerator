@@ -3,7 +3,7 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "@kartverket/geonorge-web-components": "^2.20.4",
+    "@kartverket/geonorge-web-components": "^2.20.6",
     "jquery": "3.6.1"
   }
 }
