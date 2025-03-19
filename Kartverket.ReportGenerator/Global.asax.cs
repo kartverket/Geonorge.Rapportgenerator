@@ -59,10 +59,10 @@ namespace Kartverket.ReportGenerator
                     if (Request.Path != "/Report/SignOut" && Request.Path != "/signout-callback-oidc" && Request.QueryString["logout"] != "true" && !Request.Path.Contains("MainNavigation.js")
                         && !Request.Path.Contains("GeoNorgeFooter.js") && !Request.Path.Contains("main.min.css")
                         && !Request.Path.Contains("vendorfonts.min.css") && !Request.Path.Contains("vendor.css") 
-                        && !Request.Path.Contains("node-modules/scripts?v=")
-                        && !Request.Path.Contains("Content/bower_components/kartverket-felleskomponenter/assets/css/styles?v=")
+                        && !Request.Path.Contains("node-modules/scripts")
+                        && !Request.Path.Contains("Content/bower_components/kartverket-felleskomponenter/assets/css/styles")
                         && !Request.Path.Contains("Content/site.css")
-                         && !Request.Path.Contains("Content/shared-partials-styles?v=")
+                         && !Request.Path.Contains("Content/shared-partials-styles")
                         && Request.Path != "/node_modules/jquery/dist/jquery.js" && Request.Path != "/dist/main.css" && Request.Path != "/Content/site.css" && Request.Path != "/Content/bower_components/kartverket-felleskomponenter/assets/css/vendor.min.css")
                         Response.Redirect("/Report/SignIn?autologin=true&ReturnUrl=" + redirectUri);
                 }
