@@ -46,6 +46,33 @@ namespace Kartverket.ReportGenerator
             }
         }
 
+        protected void Application_EndRequest()
+        {
+            try
+            {
+                var redirectUri = HttpContext.Current.Request.Url.AbsoluteUri;
+
+                var loggedInCookie = Context.Request.Cookies["_loggedIn"];
+                if (string.IsNullOrEmpty(Request.QueryString["autologin"]) && loggedInCookie != null && loggedInCookie.Value == "true" && !Request.IsAuthenticated)
+                {
+                    //if (Request.Path != "/Report/SignOut" && Request.Path != "/signout-callback-oidc" && Request.QueryString["logout"] != "true" && Request.Path != "/shared-partials-scripts" && Request.Path != "/shared-partials-styles" && !Request.Path.Contains("Content") && Request.Path != "/Content/local-styles" && Request.Path != "/Content/bower_components/kartverket-felleskomponenter/assets/js/scripts" && Request.Path != "/Scripts/local-scripts" && !Request.Path.Contains("node_modules") && !Request.Path.Contains("dist"))
+                    if (Request.Path != "/Report/SignOut" && Request.Path != "/signout-callback-oidc" && Request.QueryString["logout"] != "true" && !Request.Path.Contains("MainNavigation.js")
+                        && !Request.Path.Contains("GeoNorgeFooter.js") && !Request.Path.Contains("main.min.css")
+                        && !Request.Path.Contains("vendorfonts.min.css") && !Request.Path.Contains("vendor.css") 
+                        && !Request.Path.Contains("node-modules/scripts")
+                        && !Request.Path.Contains("Content/bower_components/kartverket-felleskomponenter/assets/css/styles")
+                        && !Request.Path.Contains("Content/site.css")
+                         && !Request.Path.Contains("Content/shared-partials-styles")
+                        && Request.Path != "/node_modules/jquery/dist/jquery.js" && Request.Path != "/dist/main.css" && Request.Path != "/Content/site.css" && Request.Path != "/Content/bower_components/kartverket-felleskomponenter/assets/css/vendor.min.css")
+                        Response.Redirect("/Report/SignIn?autologin=true&ReturnUrl=" + redirectUri);
+                }
+            }
+
+            catch (Exception ex)
+            {
+            }
+        }
+
         void ValidateReturnUrl(NameValueCollection queryString)
         {
             if (queryString != null)

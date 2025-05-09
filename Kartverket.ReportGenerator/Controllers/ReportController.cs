@@ -121,8 +121,13 @@ namespace Kartverket.ReportGenerator.Controllers
 
         public void SignIn()
         {
-            var redirectUrl = Url.Action(nameof(ReportController.Index), "Report");
-            HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUrl },
+            var redirectUri = Url.Action(nameof(ReportController.Index), "Report");
+
+            if (Request.QueryString["ReturnUrl"] != null)
+            {
+                redirectUri = Request.QueryString["ReturnUrl"];
+            }
+            HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = redirectUri },
                 OpenIdConnectAuthenticationDefaults.AuthenticationType);
         }
 
@@ -141,7 +146,7 @@ namespace Kartverket.ReportGenerator.Controllers
         /// <returns></returns>
         public ActionResult SignOutCallback()
         {
-            return RedirectToAction(nameof(ReportController.Index), "Report");
+            return Redirect("/Report?logout=true");
         }
     }
 }
