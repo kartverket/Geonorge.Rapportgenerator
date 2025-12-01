@@ -459,9 +459,9 @@ namespace Kartverket.ReportGenerator.Services
                 url = url + "&facets%5b0%5dname=type&facets%5b0%5dvalue=" + type;
 
             if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(organization))
-                url = url + "&facets%5b1%5dname=organization&facets%5b1%5dvalue=" + organization;
+                url = url + "&facets%5b1%5dname=organizations&facets%5b1%5dvalue=" + organization;
             else if (!string.IsNullOrEmpty(organization))
-                url = url + "&facets%5b0%5dname=organization&facets%5b0%5dvalue=" + organization;
+                url = url + "&facets%5b0%5dname=organizations&facets%5b0%5dvalue=" + organization;
 
             System.Net.WebClient c = new System.Net.WebClient();
             c.Encoding = System.Text.Encoding.UTF8;
@@ -477,7 +477,7 @@ namespace Kartverket.ReportGenerator.Services
             }
             else
             { 
-                var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organization").Select(o => o.SelectToken("FacetResults")).Values();
+                var organizations = response.SelectToken("Facets").Where(s => (string)s["FacetField"] == "organizations").Select(o => o.SelectToken("FacetResults")).Values();
 
                 foreach (var item in organizations)
                 {
