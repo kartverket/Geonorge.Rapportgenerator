@@ -26,13 +26,4 @@ Applikasjonen er utviklet med C# og .NET framework.
 
 For Det offentlige kartgrunnlaget er det laget 3 rapporter i registeret, se https://register.geonorge.no/Help/Api/POST-api-Report.
 
-De andre rapportene er basert på wfs stored queries.  For å administrere hvilke datasett som skal benyttes vedlikeholder man tabellen MetadataEntries og feltet Uuid i databasen kartverket_reportgenerator.
-Rapportgeneratoren vil da hente info fra kartkatalogen sitt api for å finne tittel på datasett og url til wfs tjenesten.
-
-I definisjonen av stored queries er det valgt følgende navnekonvensjon for StoredQuery sin id: <objekttype>_PrAdmEnhet_<Totalt|objektegenskap>
-Det er kun område, parameter admEnhNr som er inputt.
-Eks. storedquery sin id/name:
-TettstedHCparkering_PrAdmEnhet_LengdeMindreEnn6
-TettstedHCparkering_PrAdmEnhet_Totalt 
-
-StoredQuery må returnere følgende projeksjon for at punktet skal vises rett i kartet: srsName="urn:ogc:def:crs:EPSG::25833".
+Det finnes også innholdsstatistikk over antall metadata, produktark, kodelister etc.
